@@ -1,13 +1,12 @@
-# 🎮 2D Python Game with Physics and Graphics
+# 🎮 Bear's Fishing Empire
 
 ## 📖 Project Overview
-Welcome to our **2D Python Game** project! 🎉 This project was developed as part of a school assignment to create a fun and interactive 2D game using **Python**. The game features physics mechanics and engaging graphics to deliver an entertaining experience for players.  
+Welcome to our **Bear's Fishing Empire** project! 🎉 This project was developed as part of a school assignment to create a fun and interactive 2D game using **Python**. The game features physics mechanics and engaging graphics to deliver an entertaining experience for players.  
 
 ## 🚀 Features
 - 🌀 Realistic 2D physics for immersive gameplay  
 - 🎨 Custom-designed graphics and animations  
 - 🎵 Optional sound effects and music  
-- 🕹️ Multiple levels of increasing difficulty  
 
 ## 🛠️ Technologies Used
 - **Python** 🐍  
@@ -39,6 +38,4 @@ Here’s what the game looks like:
   ![Gameplay](path/to/gameplay-screenshot.png)  
 
 ## ✨ Future Improvements
-- 🏆 Add a leaderboard for high scores  
-- 🌎 Include multiplayer functionality  
 - 🚀 Expand with new levels and challenges  
