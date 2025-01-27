@@ -11,13 +11,14 @@ Welcome to our **Bear's Fishing Empire** project! 🎉 This project was develope
 ## 🛠️ Technologies Used
 - **Python** 🐍  
 - **Pygame** library 🎮  
-- Additional libraries for physics and graphics  
+- **pyTMX** to import the map
+- **math** to do the calculations
 
 ## 🕹️ How to Play
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/your-username/2d-python-game.git
-   cd 2d-python-game
+   git clone https://github.com/An1onegit/Projet_transverse.git
+   cd Projet_transverse
    ```  
 2. Install the dependencies:  
    ```bash
@@ -27,7 +28,7 @@ Welcome to our **Bear's Fishing Empire** project! 🎉 This project was develope
    ```bash
    python main.py
    ```  
-4. Use the arrow keys to move your character and spacebar to perform actions.  
+4. Use the arrow keys or ZQSD to move your character and E to perform actions.  
 
 ## 🖼️ Screenshots  
 Here’s what the game looks like:  
