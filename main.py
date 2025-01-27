@@ -1,6 +1,15 @@
 import pygame
 import math
+from pytmx.util_pygame import load_pygame
 from library.menu import *
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, pos, surf, groups):
+        super().__init__(groups)
+        self.image = surf
+        self.rect = self.image.get_rect(topleft = pos)
+
+
 
 def Main():
     # pygame setup
@@ -13,6 +22,15 @@ def Main():
 
     fps = 120
     clock = pygame.time.Clock()
+
+    tmx_data = load_pygame('sources/maps/mapTest2.tmx')
+    sprite_group = pygame.sprite.Group()
+
+    for layer in tmx_data.visible_layers:
+        if hasattr(layer, 'data'):
+            for x, y, surf in layer.tiles():
+                pos = (x*32, y*32)
+                Tile(pos= pos, surf= surf, groups=sprite_group)
 
     # Player's caracteristics
     ## Coordinates 
@@ -41,7 +59,7 @@ def Main():
 
         # fill the screen with a color to wipe away anything from last frame
         screen.fill((134, 203, 146) )
-        
+
         # Player's movements
         keys = pygame.key.get_pressed()
         
@@ -70,6 +88,8 @@ def Main():
         y += y_change * speed * dt
 
         # RENDER YOUR GAME HERE
+        sprite_group.draw(screen)
+
         pygame.draw.rect(screen,(57, 42, 22),(x,y,width,height))
 
         # flip() the display to put your work on screen
