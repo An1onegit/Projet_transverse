@@ -9,7 +9,7 @@ pygame.display.set_caption("Bear's Fishing Empire")
 clock = pygame.time.Clock()
 running = True
 
-fps = 60
+fps = 120
 clock = pygame.time.Clock()
 
 # Player's caracteristics
@@ -21,7 +21,13 @@ y = 250
 width = 50
 height = 50
 
+# Speed
+speed = 800
+
 while running:
+    # Calculate delta time (time since last frame)
+    dt = clock.tick(fps) / 1000.0  # Convert milliseconds to seconds
+
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -34,6 +40,7 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("green")
     
+    # Player's movements
     keys = pygame.key.get_pressed()
     
     # Initialize movement variables
@@ -42,13 +49,13 @@ while running:
 
     # Handle key inputs
     if keys[pygame.K_d]:
-        x_change += 5   
+        x_change += 1   
     if keys[pygame.K_q]:
-        x_change -= 5
+        x_change -= 1
     if keys[pygame.K_s]:
-        y_change += 5
+        y_change += 1
     if keys[pygame.K_z]:
-        y_change -= 5
+        y_change -= 1
 
     # Normalize diagonal movement
     if x_change != 0 and y_change != 0:
@@ -57,8 +64,8 @@ while running:
         y_change /= math.sqrt(2)
 
     # Update the position
-    x += x_change
-    y += y_change
+    x += x_change * speed * dt
+    y += y_change * speed * dt
 
     # RENDER YOUR GAME HERE
     pygame.draw.rect(screen,(255,0,0),(x,y,width,height))
