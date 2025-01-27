@@ -1,4 +1,3 @@
-# Example file showing a basic pygame "game loop"
 import pygame
 import math
 
@@ -22,7 +21,6 @@ y = 250
 width = 50
 height = 50
 
-
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -37,6 +35,7 @@ while running:
     screen.fill("green")
     
     keys = pygame.key.get_pressed()
+    
     # Initialize movement variables
     x_change = 0
     y_change = 0
