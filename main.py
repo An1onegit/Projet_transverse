@@ -2,12 +2,6 @@ import pygame
 import random
 from pytmx.util_pygame import load_pygame
 
-class Tree(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
-        super().__init__(groups)
-        self.image = pygame.image.load("sources/img/rpgChar.png").convert_alpha()
-        self.rect = self.image.get_rect(topleft = pos)
-
 class Tile(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups):
         super().__init__(groups)
@@ -18,7 +12,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups):
         super().__init__(groups)
         self.image = pygame.image.load("sources/img/rpgChar.png").convert_alpha()
-        self.image = pygame.transform.scale_by(self.image, 0.8)
+        self.image = pygame.transform.scale_by(self.image, 1/3)
         self.rect = self.image.get_rect(center=pos)
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
@@ -56,8 +50,8 @@ class CameraGroup(pygame.sprite.Group):
 
         # camera offset
         self.offset = pygame.math.Vector2()
-        self.half_w = self.display_surface.get_size()[0]//2
-        self.half_h = self.display_surface.get_size()[1]//2
+        self.half_w = self.display_surface.get_width() // 2
+        self.half_h = self.display_surface.get_height() // 2
 
         #Ground
         self.ground_surf = surf
@@ -98,7 +92,7 @@ class CameraGroup(pygame.sprite.Group):
         ground_offset = self.ground_rect.topleft - self.offset
         self.display_surface.blit(self.ground_surf, ground_offset)
 
-        for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
+        for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.bottom):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
 
@@ -123,6 +117,22 @@ class TileMap:
                     pos = (x * self.tile_width, y * self.tile_height)
                     self.surface.blit(surf, pos)
 
+    def render_objects(self):
+        for obj in self.tmx_data.objects:
+            if obj.image:
+                # Scale the object's image
+                scaled_image = pygame.transform.scale(
+                    obj.image,
+                    (int(obj.image.get_width() * 1),
+                     int(obj.image.get_height() * 1))
+                )
+
+                # Scale the object's position
+                scaled_pos = (obj.x * 1, obj.y * 1)
+
+                # Create the object
+                Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
+
     def get_surface(self):
         return self.surface
 
@@ -134,17 +144,12 @@ pygame.display.set_caption("Bear's Fishing Empire")
 # Load map and add tiles
 tile_map = TileMap("sources/maps/mapTest2.tmx")
 map_surface = tile_map.get_surface().convert_alpha()
-map_surface = pygame.transform.scale_by(map_surface, 2)
+map_surface = pygame.transform.scale_by(map_surface, 1)
 
 # Group setup
 sprite_group = CameraGroup(map_surface)
 
-
-for i in range(20):
-    random_x = random.randint(0,1000)
-    random_y = random.randint(0,1000)
-    Tree((random_x, random_y), sprite_group)
-
+tile_map.render_objects()
 
 # Create player
 player = Player((960, 590), sprite_group)
@@ -172,7 +177,7 @@ while running:
     # Update and draw sprites
     sprite_group.custom_draw(player)
     sprite_group.update(dt)
-    
+
 
     # Flip the display
     pygame.display.flip()
