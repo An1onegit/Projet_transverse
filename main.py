@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups):
         super().__init__(groups)
         self.image = pygame.image.load("sources/img/rpgChar.png").convert_alpha()
-        self.image = pygame.transform.scale_by(self.image,.8)
+        self.image = pygame.transform.scale_by(self.image, 1/3)
         self.rect = self.image.get_rect(center=pos)
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
@@ -106,8 +106,6 @@ class TileMap:
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.render_to_surface()
 
-        self.zoom = 2.5
-
     def render_to_surface(self):
         """
         Draw tiles onto the given surface.
@@ -124,12 +122,12 @@ class TileMap:
                 # Scale the object's image
                 scaled_image = pygame.transform.scale(
                     obj.image,
-                    (int(obj.image.get_width() * self.zoom),
-                     int(obj.image.get_height() * self.zoom))
+                    (int(obj.image.get_width() * 1),
+                     int(obj.image.get_height() * 1))
                 )
 
                 # Scale the object's position
-                scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
+                scaled_pos = (obj.x * 1, obj.y * 1)
 
                 # Create the object
                 Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
@@ -145,7 +143,7 @@ pygame.display.set_caption("Bear's Fishing Empire")
 # Load map and add tiles
 tile_map = TileMap("sources/maps/mapTest2.tmx")
 map_surface = tile_map.get_surface().convert_alpha()
-map_surface = pygame.transform.scale_by(map_surface, tile_map.zoom)
+map_surface = pygame.transform.scale_by(map_surface, 1)
 
 # Group setup
 sprite_group = CameraGroup(map_surface)
