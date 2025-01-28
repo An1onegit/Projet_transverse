@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups):
         super().__init__(groups)
         self.image = pygame.image.load("sources/img/rpgChar.png").convert_alpha()
-        self.image = pygame.transform.scale_by(self.image, 0.5)
+        self.image = pygame.transform.scale_by(self.image, 0.8)
         self.rect = self.image.get_rect(center=pos)
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
@@ -53,14 +53,54 @@ class CameraGroup(pygame.sprite.Group):
     def __init__(self, surf):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
+
+        # camera offset
+        self.offset = pygame.math.Vector2()
+        self.half_w = self.display_surface.get_size()[0]//2
+        self.half_h = self.display_surface.get_size()[1]//2
+
+        #Ground
         self.ground_surf = surf
         self.ground_rect = self.ground_surf.get_rect(topleft = (0,0))
 
-    def custom_draw(self):
-        self.display_surface.blit(self.ground_surf, self.ground_rect)
+        #box setup
+        self.camera_borders = {'left': 800, 'right': 800, 'top': 400, 'bottom': 400}
+        l = self.camera_borders['left']
+        t = self.camera_borders['top']
+        w = self.display_surface.get_size()[0] - (self.camera_borders['left'] + self.camera_borders['right'])
+        h = self.display_surface.get_size()[1] - (self.camera_borders['top'] + self.camera_borders['bottom'])
+        self.camera_rect = pygame.Rect(l,t,w,h)
+
+
+    def center_target_camera(self, target):
+        self.offset.x = target.rect.centerx - self.half_w
+        self.offset.y = target.rect.centery - self.half_h
+
+    def box_target_camera(self, target):
+
+        if target.rect.left < self.camera_rect.left:
+            self.camera_rect.left = target.rect.left
+        if target.rect.right > self.camera_rect.right:
+            self.camera_rect.right = target.rect.right
+        if target.rect.top < self.camera_rect.top:
+            self.camera_rect.top = target.rect.top
+        if target.rect.bottom > self.camera_rect.bottom:
+            self.camera_rect.bottom = target.rect.bottom
+
+        self.offset.x = self.camera_rect.left - self.camera_borders['left']
+        self.offset.y = self.camera_rect.top - self.camera_borders['top']
+
+    def custom_draw(self, player):
+
+        self.box_target_camera(player)
+
+        #ground
+        ground_offset = self.ground_rect.topleft - self.offset
+        self.display_surface.blit(self.ground_surf, ground_offset)
 
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            self.display_surface.blit(sprite.image, sprite.rect)
+            offset_pos = sprite.rect.topleft - self.offset
+            self.display_surface.blit(sprite.image, offset_pos)
 
 class TileMap:
     def __init__(self, map_file):
@@ -93,7 +133,8 @@ pygame.display.set_caption("Bear's Fishing Empire")
 
 # Load map and add tiles
 tile_map = TileMap("sources/maps/mapTest2.tmx")
-map_surface = tile_map.get_surface()
+map_surface = tile_map.get_surface().convert_alpha()
+map_surface = pygame.transform.scale_by(map_surface, 2)
 
 # Group setup
 sprite_group = CameraGroup(map_surface)
@@ -106,7 +147,7 @@ for i in range(20):
 
 
 # Create player
-Player((960, 590), sprite_group)
+player = Player((960, 590), sprite_group)
 
 # Clock for delta time
 fps = 120
@@ -129,7 +170,7 @@ while running:
     screen.fill((134, 203, 146))
 
     # Update and draw sprites
-    sprite_group.custom_draw()
+    sprite_group.custom_draw(player)
     sprite_group.update(dt)
     
 
