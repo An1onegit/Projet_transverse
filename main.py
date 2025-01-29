@@ -68,30 +68,30 @@ class Player(pygame.sprite.Sprite):
     def movement_anim(self, direction):
         match (direction):
             case 0:
-                self.counter+=1
+                self.counter+=.2
                 if self.counter >= len(self.right):
                     self.counter=0
-                self.image = self.right[self.counter]
+                self.image = self.right[int(self.counter)]
             case 1:
-                self.counter+=1
+                self.counter+=.2
                 if self.counter >= len(self.left):
                     self.counter=0
-                self.image = self.left[self.counter]
+                self.image = self.left[int(self.counter)]
             case 2:
-                self.counter+=1
+                self.counter+=.2
                 if self.counter >= len(self.down):
                     self.counter=0
-                self.image = self.down[self.counter]
+                self.image = self.down[int(self.counter)]
             case 3:
-                self.counter+=1
+                self.counter+=.2
                 if self.counter >= len(self.up):
                     self.counter=0
-                self.image = self.up[self.counter]
+                self.image = self.up[int(self.counter)]
             case 5:
-                self.counter+=1
+                self.counter+=.2
                 if self.counter >= len(self.idle):
                     self.counter=0
-                self.image = self.idle[self.counter]
+                self.image = self.idle[int(self.counter)]
             
 
     def input(self):
