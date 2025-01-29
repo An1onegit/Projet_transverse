@@ -32,13 +32,13 @@ class Player(pygame.sprite.Sprite):
         self.down.append(pygame.image.load("sources/img/animations/down3.png").convert_alpha()) 
         self.down.append(pygame.image.load("sources/img/animations/down4.png").convert_alpha()) 
         for i in self.right:
-            i = pygame.transform.scale_by(i, 3)
+            pygame.transform.scale_by(i, 3)
         for i in self.left:
-            i = pygame.transform.scale_by(i, 3)
+            pygame.transform.scale_by(i, 3)
         for i in self.up:
-            i = pygame.transform.scale_by(i, 3)
+            pygame.transform.scale_by(i, 3)
         for i in self.down:
-            i = pygame.transform.scale_by(i, 3)
+            pygame.transform.scale_by(i, 3)
 
         self.idle = []
         self.idle.append(pygame.image.load("sources/img/animations/down1.png").convert_alpha())  
@@ -190,20 +190,22 @@ class TileMap:
                     self.surface.blit(surf, pos)
 
     def render_objects(self):
-        for obj in self.tmx_data.objects:
-            if obj.image:
-                # Scale the object's image
-                scaled_image = pygame.transform.scale(
-                    obj.image,
-                    (int(obj.image.get_width() * self.zoom),
-                     int(obj.image.get_height() * self.zoom))
-                )
+        for layer in self.tmx_data.visible_layers:
+            if hasattr(layer, "trees"):
+                for obj in self.tmx_data.objects:
+                    if obj.image:
+                        # Scale the object's image
+                        scaled_image = pygame.transform.scale(
+                            obj.image,
+                            (int(obj.image.get_width() * self.zoom),
+                            int(obj.image.get_height() * self.zoom))
+                        )
 
-                # Scale the object's position
-                scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
+                        # Scale the object's position
+                        scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
 
-                # Create the object
-                Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
+                        # Create the object
+                        Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
 
     def get_surface(self):
         return self.surface
