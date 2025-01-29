@@ -1,5 +1,6 @@
 import pygame
 from pytmx.util_pygame import load_pygame
+import time
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups):
@@ -7,15 +8,51 @@ class Tile(pygame.sprite.Sprite):
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
 
+
+
 class Player(pygame.sprite.Sprite):
+
+    
+
     def __init__(self, pos, groups):
         super().__init__(groups)
-        self.image = pygame.image.load("sources/img/rpgChar.png").convert_alpha()
-        self.image = pygame.transform.scale_by(self.image, .8)
+        self.right = []
+        self.left = []
+        self.up = []
+        self.down = [] 
+        self.idle = []
+        self.right.append(pygame.image.load("sources/img/red.png"))
+        self.left.append(pygame.image.load("sources/img/blue.jpg"))
+        self.up.append(pygame.image.load("sources/img/yellow.png"))
+        self.down.append(pygame.image.load("sources/img/green.png"))
+        self.idle.append(pygame.image.load("sources/img/rpgChar.png"))
+        
+
+        self.counter = 0
+        self.image = self.idle[self.counter]
         self.rect = self.image.get_rect(center=pos)
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
         self.speed = 300  # Movement speed in pixels per second
+        self.anim=5
+
+    def movement_anim(self, direction):
+        self.counter+=1
+        if self.counter >= len(self.idle):
+            self.counter=0
+        match (direction):
+            case 0:
+                self.image = self.right[self.counter]
+            case 1:
+                self.image = self.left[self.counter]
+            case 2:
+                self.image = self.up[self.counter]
+            case 3:
+                self.image = self.down[self.counter]
+            case 5:
+                self.image = self.idle[self.counter]
+            
+
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -25,13 +62,21 @@ class Player(pygame.sprite.Sprite):
         # Handle key inputs
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.direction.x = 1
+            self.anim = 0
         elif keys[pygame.K_q] or keys[pygame.K_LEFT]:
             self.direction.x = -1
+            self.anim = 1
+        
 
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             self.direction.y = 1
+            self.anim = 2
+
         elif keys[pygame.K_z] or keys[pygame.K_UP]:
             self.direction.y = -1
+            self.anim = 3
+        
+
 
     def update(self, dt):
         self.input()
@@ -41,6 +86,7 @@ class Player(pygame.sprite.Sprite):
         # Update position
         self.position += self.direction * self.speed * dt
         self.rect.center = self.position
+        self.movement_anim(self.anim)
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, surf):
@@ -171,6 +217,8 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
+        else:
+            player.anim = 5
 
     # Clear the screen
     screen.fill((134, 203, 146))
