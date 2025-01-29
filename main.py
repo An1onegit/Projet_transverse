@@ -8,25 +8,40 @@ class Tile(pygame.sprite.Sprite):
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
 
-
-
 class Player(pygame.sprite.Sprite):
-
-    
-
     def __init__(self, pos, groups):
         super().__init__(groups)
         self.right = []
+        self.right.append(pygame.image.load("sources/img/animations/right1.png").convert_alpha())
+        self.right.append(pygame.image.load("sources/img/animations/right2.png").convert_alpha())
+        self.right.append(pygame.image.load("sources/img/animations/right3.png").convert_alpha())
+        self.right.append(pygame.image.load("sources/img/animations/right4.png").convert_alpha())
         self.left = []
+        self.left.append(pygame.image.load("sources/img/animations/left1.png").convert_alpha())
+        self.left.append(pygame.image.load("sources/img/animations/left2.png").convert_alpha())
+        self.left.append(pygame.image.load("sources/img/animations/left3.png").convert_alpha())
+        self.left.append(pygame.image.load("sources/img/animations/left4.png").convert_alpha())
         self.up = []
-        self.down = [] 
+        self.up.append(pygame.image.load("sources/img/animations/up1.png").convert_alpha())
+        self.up.append(pygame.image.load("sources/img/animations/up2.png").convert_alpha())
+        self.up.append(pygame.image.load("sources/img/animations/up3.png").convert_alpha())
+        self.up.append(pygame.image.load("sources/img/animations/up4.png").convert_alpha())
+        self.down = []
+        self.down.append(pygame.image.load("sources/img/animations/down1.png").convert_alpha()) 
+        self.down.append(pygame.image.load("sources/img/animations/down2.png").convert_alpha()) 
+        self.down.append(pygame.image.load("sources/img/animations/down3.png").convert_alpha()) 
+        self.down.append(pygame.image.load("sources/img/animations/down4.png").convert_alpha()) 
+        for i in self.right:
+            i = pygame.transform.scale_by(i, 3)
+        for i in self.left:
+            i = pygame.transform.scale_by(i, 3)
+        for i in self.up:
+            i = pygame.transform.scale_by(i, 3)
+        for i in self.down:
+            i = pygame.transform.scale_by(i, 3)
+
         self.idle = []
-        self.right.append(pygame.image.load("sources/img/red.png"))
-        self.left.append(pygame.image.load("sources/img/blue.jpg"))
-        self.up.append(pygame.image.load("sources/img/yellow.png"))
-        self.down.append(pygame.image.load("sources/img/green.png"))
-        self.idle.append(pygame.image.load("sources/img/rpgChar.png"))
-        
+        self.idle.append(pygame.image.load("sources/img/animations/down1.png").convert_alpha())  
 
         self.counter = 0
         self.image = self.idle[self.counter]
@@ -37,22 +52,33 @@ class Player(pygame.sprite.Sprite):
         self.anim=5
 
     def movement_anim(self, direction):
-        self.counter+=1
-        if self.counter >= len(self.idle):
-            self.counter=0
         match (direction):
             case 0:
+                self.counter+=1
+                if self.counter >= len(self.right):
+                    self.counter=0
                 self.image = self.right[self.counter]
             case 1:
+                self.counter+=1
+                if self.counter >= len(self.left):
+                    self.counter=0
                 self.image = self.left[self.counter]
             case 2:
-                self.image = self.up[self.counter]
-            case 3:
+                self.counter+=1
+                if self.counter >= len(self.down):
+                    self.counter=0
                 self.image = self.down[self.counter]
+            case 3:
+                self.counter+=1
+                if self.counter >= len(self.up):
+                    self.counter=0
+                self.image = self.up[self.counter]
             case 5:
+                self.counter+=1
+                if self.counter >= len(self.idle):
+                    self.counter=0
                 self.image = self.idle[self.counter]
             
-
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -76,7 +102,6 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = -1
             self.anim = 3
         
-
 
     def update(self, dt):
         self.input()
