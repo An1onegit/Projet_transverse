@@ -1,6 +1,5 @@
 import pygame
 from pytmx.util_pygame import load_pygame
-import time
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups):
@@ -63,34 +62,34 @@ class Player(pygame.sprite.Sprite):
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
         self.speed = 300  # Movement speed in pixels per second
-        self.anim=5
+        self.anim = 5
 
     def movement_anim(self, direction):
         match (direction):
             case 0:
-                self.counter+=.2
+                self.counter += .15
                 if self.counter >= len(self.right):
-                    self.counter=0
+                    self.counter = 0
                 self.image = self.right[int(self.counter)]
             case 1:
-                self.counter+=.2
+                self.counter += .15
                 if self.counter >= len(self.left):
-                    self.counter=0
+                    self.counter = 0
                 self.image = self.left[int(self.counter)]
             case 2:
-                self.counter+=.2
+                self.counter += .15
                 if self.counter >= len(self.down):
-                    self.counter=0
+                    self.counter = 0
                 self.image = self.down[int(self.counter)]
             case 3:
-                self.counter+=.2
+                self.counter += .15
                 if self.counter >= len(self.up):
-                    self.counter=0
+                    self.counter = 0
                 self.image = self.up[int(self.counter)]
             case 5:
-                self.counter+=.2
+                self.counter += .15
                 if self.counter >= len(self.idle):
-                    self.counter=0
+                    self.counter = 0
                 self.image = self.idle[int(self.counter)]
             
 
@@ -206,7 +205,7 @@ class TileMap:
     def render_objects(self):
         for layer in self.tmx_data.layers:
             if layer.name == "trees":
-                for obj in self.tmx_data.objects:
+                for obj in layer:
                         # Scale the object's image
                         scaled_image = pygame.transform.scale(
                             obj.image,
@@ -231,7 +230,7 @@ pygame.display.set_caption("Bear's Fishing Empire")
 # Load map and add tiles
 tile_map = TileMap("sources/maps/mapTest2.tmx")
 map_surface = tile_map.get_surface().convert_alpha()
-map_surface = pygame.transform.scale_by(map_surface, 2.5)
+map_surface = pygame.transform.scale_by(map_surface, tile_map.zoom)
 
 # Group setup
 sprite_group = CameraGroup(map_surface)
