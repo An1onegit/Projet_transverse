@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="69" height="61" tilewidth="32" tileheight="32" infinite="0" nextlayerid="22" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="69" height="61" tilewidth="32" tileheight="32" infinite="0" nextlayerid="23" nextobjectid="16">
  <tileset firstgid="1" source="tuiles.tsx"/>
  <tileset firstgid="65" source="TX Plant.tsx"/>
  <tileset firstgid="321" source="TX Props.tsx"/>
@@ -10,6 +10,7 @@
  <tileset firstgid="1321" source="TX Tileset Grass.tsx"/>
  <tileset firstgid="1385" source="TX Shadow.tsx"/>
  <tileset firstgid="1641" source="TX Shadow Plant.tsx"/>
+ <tileset firstgid="1897" source="Objects.tsx"/>
  <layer id="2" name="green" width="69" height="61">
   <data encoding="csv">
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,17,17,17,25,25,25,25,25,25,26,27,28,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,25,25,25,25,25,25,25,
@@ -920,4 +921,19 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="22" name="trees">
+  <object id="1" gid="1897" x="552" y="400" width="160" height="160"/>
+  <object id="2" gid="1897" x="768" y="400" width="160" height="160"/>
+  <object id="3" gid="1897" x="600" y="576" width="160" height="160"/>
+  <object id="4" gid="1897" x="832" y="576" width="160" height="160"/>
+  <object id="5" gid="1897" x="624" y="752" width="160" height="160"/>
+  <object id="8" gid="1897" x="207.879" y="516.364" width="160" height="160"/>
+  <object id="9" gid="1897" x="80" y="192" width="160" height="160"/>
+  <object id="10" gid="1897" x="320" y="216" width="160" height="160"/>
+  <object id="11" gid="1897" x="56" y="648" width="160" height="160"/>
+  <object id="12" gid="1897" x="264" y="904" width="160" height="160"/>
+  <object id="13" gid="1897" x="320" y="584" width="160" height="160"/>
+  <object id="14" gid="1897" x="608" y="240" width="160" height="160"/>
+  <object id="15" gid="1897" x="32" y="360" width="160" height="160"/>
+ </objectgroup>
 </map>

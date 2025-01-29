@@ -11,7 +11,7 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups):
         super().__init__(groups)
-        scale_factor = 4  # Facteur d'agrandissement (2x plus grand)
+        scale_factor = 4
 
         self.right = [
             pygame.transform.scale(
@@ -204,20 +204,21 @@ class TileMap:
                     self.surface.blit(surf, pos)
 
     def render_objects(self):
-        for obj in self.tmx_data.objects:
-            if obj.name == "trees" and obj.image:
-                # Scale the object's image
-                scaled_image = pygame.transform.scale(
-                    obj.image,
-                    (int(obj.image.get_width() * self.zoom),
-                    int(obj.image.get_height() * self.zoom))
-                )
+        for layer in self.tmx_data.layers:
+            if layer.name == "trees":
+                for obj in self.tmx_data.objects:
+                        # Scale the object's image
+                        scaled_image = pygame.transform.scale(
+                            obj.image,
+                            (int(obj.image.get_width() * self.zoom),
+                            int(obj.image.get_height() * self.zoom))
+                        )
 
-                # Scale the object's position
-                scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
+                        # Scale the object's position
+                        scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
 
-                # Create the object
-                Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
+                        # Create the object
+                        Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
 
     def get_surface(self):
         return self.surface
