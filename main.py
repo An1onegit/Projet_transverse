@@ -11,37 +11,51 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups):
         super().__init__(groups)
-        self.right = []
-        self.right.append(pygame.image.load("sources/img/animations/right1.png").convert_alpha())
-        self.right.append(pygame.image.load("sources/img/animations/right2.png").convert_alpha())
-        self.right.append(pygame.image.load("sources/img/animations/right3.png").convert_alpha())
-        self.right.append(pygame.image.load("sources/img/animations/right4.png").convert_alpha())
-        self.left = []
-        self.left.append(pygame.image.load("sources/img/animations/left1.png").convert_alpha())
-        self.left.append(pygame.image.load("sources/img/animations/left2.png").convert_alpha())
-        self.left.append(pygame.image.load("sources/img/animations/left3.png").convert_alpha())
-        self.left.append(pygame.image.load("sources/img/animations/left4.png").convert_alpha())
-        self.up = []
-        self.up.append(pygame.image.load("sources/img/animations/up1.png").convert_alpha())
-        self.up.append(pygame.image.load("sources/img/animations/up2.png").convert_alpha())
-        self.up.append(pygame.image.load("sources/img/animations/up3.png").convert_alpha())
-        self.up.append(pygame.image.load("sources/img/animations/up4.png").convert_alpha())
-        self.down = []
-        self.down.append(pygame.image.load("sources/img/animations/down1.png").convert_alpha()) 
-        self.down.append(pygame.image.load("sources/img/animations/down2.png").convert_alpha()) 
-        self.down.append(pygame.image.load("sources/img/animations/down3.png").convert_alpha()) 
-        self.down.append(pygame.image.load("sources/img/animations/down4.png").convert_alpha()) 
-        for i in self.right:
-            pygame.transform.scale_by(i, 3)
-        for i in self.left:
-            pygame.transform.scale_by(i, 3)
-        for i in self.up:
-            pygame.transform.scale_by(i, 3)
-        for i in self.down:
-            pygame.transform.scale_by(i, 3)
+        scale_factor = 4  # Facteur d'agrandissement (2x plus grand)
 
-        self.idle = []
-        self.idle.append(pygame.image.load("sources/img/animations/down1.png").convert_alpha())  
+        self.right = [
+            pygame.transform.scale(
+                pygame.image.load(f"sources/img/animations/right{i}.png").convert_alpha(),
+                (int(pygame.image.load(f"sources/img/animations/right{i}.png").get_width() * scale_factor),
+                int(pygame.image.load(f"sources/img/animations/right{i}.png").get_height() * scale_factor))
+            )
+            for i in range(1, 5)
+        ]
+
+        self.left = [
+            pygame.transform.scale(
+                pygame.image.load(f"sources/img/animations/left{i}.png").convert_alpha(),
+                (int(pygame.image.load(f"sources/img/animations/left{i}.png").get_width() * scale_factor),
+                int(pygame.image.load(f"sources/img/animations/left{i}.png").get_height() * scale_factor))
+            )
+            for i in range(1, 5)
+        ]
+
+        self.up = [
+            pygame.transform.scale(
+                pygame.image.load(f"sources/img/animations/up{i}.png").convert_alpha(),
+                (int(pygame.image.load(f"sources/img/animations/up{i}.png").get_width() * scale_factor),
+                int(pygame.image.load(f"sources/img/animations/up{i}.png").get_height() * scale_factor))
+            )
+            for i in range(1, 5)
+        ]
+
+        self.down = [
+            pygame.transform.scale(
+                pygame.image.load(f"sources/img/animations/down{i}.png").convert_alpha(),
+                (int(pygame.image.load(f"sources/img/animations/down{i}.png").get_width() * scale_factor),
+                int(pygame.image.load(f"sources/img/animations/down{i}.png").get_height() * scale_factor))
+            )
+            for i in range(1, 5)
+        ]
+
+        self.idle = [
+            pygame.transform.scale(
+                pygame.image.load("sources/img/animations/down1.png").convert_alpha(),
+                (int(pygame.image.load("sources/img/animations/down1.png").get_width() * scale_factor),
+                int(pygame.image.load("sources/img/animations/down1.png").get_height() * scale_factor))
+            )
+        ]
 
         self.counter = 0
         self.image = self.idle[self.counter]
@@ -190,22 +204,20 @@ class TileMap:
                     self.surface.blit(surf, pos)
 
     def render_objects(self):
-        for layer in self.tmx_data.visible_layers:
-            if hasattr(layer, "trees"):
-                for obj in self.tmx_data.objects:
-                    if obj.image:
-                        # Scale the object's image
-                        scaled_image = pygame.transform.scale(
-                            obj.image,
-                            (int(obj.image.get_width() * self.zoom),
-                            int(obj.image.get_height() * self.zoom))
-                        )
+        for obj in self.tmx_data.objects:
+            if obj.name == "trees" and obj.image:
+                # Scale the object's image
+                scaled_image = pygame.transform.scale(
+                    obj.image,
+                    (int(obj.image.get_width() * self.zoom),
+                    int(obj.image.get_height() * self.zoom))
+                )
 
-                        # Scale the object's position
-                        scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
+                # Scale the object's position
+                scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
 
-                        # Create the object
-                        Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
+                # Create the object
+                Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
 
     def get_surface(self):
         return self.surface
