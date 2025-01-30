@@ -37,7 +37,10 @@ Here’s what the game looks like:
   ![image](https://github.com/user-attachments/assets/8a7ea887-48be-4d62-ba5a-ad7970a0af38)
 
 - **Gameplay:**  
-  ![Gameplay](path/to/gameplay-screenshot.png)  
+  ![image](https://github.com/user-attachments/assets/5e21e08b-bfe4-4ce8-be92-523cccaa72a7)
+
+  ![image](https://github.com/user-attachments/assets/14019fb9-a708-4d42-b65c-7342b6e174df)
+
 
 ## ✨ Future Improvements
 - 🚀 Expand with new levels and challenges  
