@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
-        self.speed = 300  # Movement speed in pixels per second
+        self.speed = 200  # Movement speed in pixels per second
         self.anim = 5
         self.hitboxes = hitboxes
 
