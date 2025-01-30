@@ -8,7 +8,7 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+    def __init__(self, pos, groups, hitboxes):
         super().__init__(groups)
         scale_factor = 4
 
@@ -63,6 +63,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.speed = 300  # Movement speed in pixels per second
         self.anim = 5
+        self.hitboxes = hitboxes
 
     def movement_anim(self, direction):
         match (direction):
@@ -114,6 +115,13 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_z] or keys[pygame.K_UP]:
             self.direction.y = -1
             self.anim = 3
+
+    def check_collision(self):
+        """ Prevent movement if hitting a hitbox """
+        for hitbox in self.hitboxes:
+            if self.rect.colliderect(hitbox):
+                return True  # Colliding
+        return False  # No collision
         
 
     def update(self, dt):
@@ -121,8 +129,14 @@ class Player(pygame.sprite.Sprite):
         # Normalize diagonal movement
         if self.direction.length() > 0:
             self.direction = self.direction.normalize()
-        # Update position
-        self.position += self.direction * self.speed * dt
+            
+        new_position = self.position + (self.direction * self.speed * dt)
+        new_rect = self.rect.copy()
+        new_rect.center = new_position
+
+        if not any(new_rect.colliderect(hitbox) for hitbox in self.hitboxes):
+            self.position = new_position  # Move only if no collision
+
         self.rect.center = self.position
         self.movement_anim(self.anim)
 
@@ -192,6 +206,10 @@ class TileMap:
 
         self.zoom = 2.5
 
+        self.hitboxes = []
+
+        self.load_hitboxes()
+
     def render_to_surface(self):
         """
         Draw tiles onto the given surface.
@@ -219,6 +237,19 @@ class TileMap:
                         # Create the object
                         Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
 
+    def load_hitboxes(self):
+        """ Load hitbox objects from the 'hitboxes' layer in Tiled """
+        for layer in self.tmx_data.layers:
+            if layer.name == "hitboxes":
+                for obj in layer:
+                    hitbox_rect = pygame.Rect(
+                        int(obj.x * self.zoom), 
+                        int(obj.y * self.zoom), 
+                        int(obj.width * self.zoom), 
+                        int(obj.height * self.zoom)
+                    )
+                    self.hitboxes.append(hitbox_rect)
+
     def get_surface(self):
         return self.surface
 
@@ -238,7 +269,7 @@ sprite_group = CameraGroup(map_surface)
 tile_map.render_objects()
 
 # Create player
-player = Player((960, 590), sprite_group)
+player = Player((960, 590), sprite_group, tile_map.hitboxes)
 
 # Clock for delta time
 fps = 120
