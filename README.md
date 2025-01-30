@@ -32,7 +32,6 @@ Welcome to our **Bear's Fishing Empire** project! 🎉 This project was develope
 
 ## 🖼️ Screenshots  
 Here’s what our game looks like:  
-*Add your screenshots here!*  
 - **Main Menu:**  
   ![image](https://github.com/user-attachments/assets/8a7ea887-48be-4d62-ba5a-ad7970a0af38)
 
