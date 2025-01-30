@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
                 (int(pygame.image.load(f"sources/img/animations/up{i}.png").get_width() * scale_factor),
                 int(pygame.image.load(f"sources/img/animations/up{i}.png").get_height() * scale_factor))
             )
-            for i in range(1, 5)
+            for i in range(1, 8)
         ]
 
         self.down = [
@@ -45,7 +45,7 @@ class Player(pygame.sprite.Sprite):
                 (int(pygame.image.load(f"sources/img/animations/down{i}.png").get_width() * scale_factor),
                 int(pygame.image.load(f"sources/img/animations/down{i}.png").get_height() * scale_factor))
             )
-            for i in range(1, 5)
+            for i in range(1, 8)
         ]
 
         self.idle = [
