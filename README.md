@@ -6,7 +6,7 @@ Welcome to our **Bear's Fishing Empire** project! 🎉 This project was develope
 ## 🚀 Features
 - 🌀 Realistic 2D physics for immersive gameplay  
 - 🎨 Custom-designed graphics and animations  
-- 🎵 Optional sound effects and music  
+- 🎵 Sound effects and music  
 
 ## 🛠️ Technologies Used
 - **Python** 🐍  
@@ -31,7 +31,7 @@ Welcome to our **Bear's Fishing Empire** project! 🎉 This project was develope
 4. Use the arrow keys or ZQSD to move your character and E to perform actions.  
 
 ## 🖼️ Screenshots  
-Here’s what the game looks like:  
+Here’s what our game looks like:  
 *Add your screenshots here!*  
 - **Main Menu:**  
   ![image](https://github.com/user-attachments/assets/8a7ea887-48be-4d62-ba5a-ad7970a0af38)
