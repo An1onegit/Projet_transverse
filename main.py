@@ -8,10 +8,8 @@ pygame.display.set_caption("Bear's Fishing Empire")
 
 # Load map and add scale it
 tile_map = TileMap("sources/maps/mapTest2.tmx")
-map_surface = tile_map.get_surface().convert_alpha()
-map_surface = pygame.transform.scale_by(map_surface, tile_map.zoom)
+map_surface = pygame.transform.scale_by(tile_map.surface, tile_map.zoom)
 
-# Group setup
 sprite_group = CameraGroup(map_surface)
 
 tile_map.render_objects(sprite_group)
@@ -30,8 +28,6 @@ while running:
 
     # Handle events
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
@@ -42,11 +38,10 @@ while running:
     screen.fill((134, 203, 146))
 
     # Update and draw sprites
-    sprite_group.custom_draw(player)
     sprite_group.update(dt)
+    sprite_group.custom_draw(player)
 
-
-    # Flip the display
+    # update the display
     pygame.display.flip()
 
 pygame.quit()

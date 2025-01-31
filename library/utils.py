@@ -9,7 +9,7 @@ class Tile(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     """
-        This class represent a player. 
+        This class represent the player. 
         It defines all the animations of the player's movements and record the inputs to handle movements.
     """
     def __init__(self, pos : tuple, groups : pygame.sprite.Group, hitboxes : list):
@@ -65,40 +65,37 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
-        self.speed = 200  # Movement speed in pixels per second
+        self.speed = 200
         self.anim = 5
         self.hitboxes = hitboxes
 
-    def movement_anim(self, direction):
+    def movement_anim(self, direction : int):
+        """ Animate the character in function of his movement direction """
+        self.counter += .15
         match (direction):
             case 0:
-                self.counter += .15
                 if self.counter >= len(self.right):
                     self.counter = 0
                 self.image = self.right[int(self.counter)]
             case 1:
-                self.counter += .15
                 if self.counter >= len(self.left):
                     self.counter = 0
                 self.image = self.left[int(self.counter)]
             case 2:
-                self.counter += .15
                 if self.counter >= len(self.down):
                     self.counter = 0
                 self.image = self.down[int(self.counter)]
             case 3:
-                self.counter += .15
                 if self.counter >= len(self.up):
                     self.counter = 0
                 self.image = self.up[int(self.counter)]
             case 5:
-                self.counter += .15
                 if self.counter >= len(self.idle):
                     self.counter = 0
                 self.image = self.idle[int(self.counter)]
-            
 
     def input(self):
+        """ Record the keyboard input to move the player. """
         keys = pygame.key.get_pressed()
         self.direction.x = 0
         self.direction.y = 0
@@ -120,45 +117,42 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = -1
             self.anim = 3
 
-    def check_collision(self):
-        """ Prevent movement if hitting a hitbox """
-        for hitbox in self.hitboxes:
-            if self.rect.colliderect(hitbox):
-                return True  # Colliding
-        return False  # No collision
-        
-
     def update(self, dt):
+        """ Handle the inputs, the collisions and the animations. """
         self.input()
-        # Normalize diagonal movement
+
+        # Normalize diagonal movements
         if self.direction.length() > 0:
             self.direction = self.direction.normalize()
-            
+
+        # Prediction of the next position of the player 
         new_position = self.position + (self.direction * self.speed * dt)
         new_rect = self.rect.copy()
         new_rect.center = new_position
 
+        # Check collision with a hitbox
         if not any(new_rect.colliderect(hitbox) for hitbox in self.hitboxes):
-            self.position = new_position  # Move only if no collision
+            self.position = new_position
 
         self.rect.center = self.position
         self.movement_anim(self.anim)
 
 class CameraGroup(pygame.sprite.Group):
+    """ Handle the camera to follow the player when he moves and """
     def __init__(self, surf):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
 
-        # camera offset
+        # Camera offset
         self.offset = pygame.math.Vector2()
         self.half_w = self.display_surface.get_width() // 2
         self.half_h = self.display_surface.get_height() // 2
 
-        #Ground
+        # Ground
         self.ground_surf = surf
         self.ground_rect = self.ground_surf.get_rect(topleft = (0,0))
 
-        #box setup
+        # Box setup
         self.camera_borders = {'left': 800, 'right': 800, 'top': 400, 'bottom': 400}
         l = self.camera_borders['left']
         t = self.camera_borders['top']
@@ -167,7 +161,9 @@ class CameraGroup(pygame.sprite.Group):
         self.camera_rect = pygame.Rect(l,t,w,h)
 
     def box_target_camera(self, target):
-
+        """
+        Follow the player when it reaches the limit of the box.
+        """
         if target.rect.left < self.camera_rect.left:
             self.camera_rect.left = target.rect.left
         if target.rect.right > self.camera_rect.right:
@@ -188,6 +184,7 @@ class CameraGroup(pygame.sprite.Group):
         ground_offset = self.ground_rect.topleft - self.offset
         self.display_surface.blit(self.ground_surf, ground_offset)
 
+        # Creates the 3D illusion
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.bottom):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
@@ -210,19 +207,15 @@ class TileMap:
         self.load_hitboxes()
 
     def render_to_surface(self):
-        """
-        Draw the map on the surface by rendering each tiles from each tile layer.
-        """
+        """ Draw the map on the surface by rendering each tiles from each tile layer. """
         for layer in self.tmx_data.visible_layers:
-            if hasattr(layer, "data"):  # Ensure the layer has tile data
+            if hasattr(layer, "data"):
                 for x, y, surf in layer.tiles():
                     pos = (x * self.tile_width, y * self.tile_height)
                     self.surface.blit(surf, pos)
 
     def render_objects(self, sprite_group):
-        """
-        Render all objects from the object layer.
-        """
+        """ Render all objects from the object layer 'trees'. """
         for layer in self.tmx_data.layers:
             if layer.name == "trees":
                 for obj in layer:
@@ -240,7 +233,7 @@ class TileMap:
                         Tile(scaled_pos, surf=scaled_image, groups=sprite_group)
 
     def load_hitboxes(self):
-        """ Load hitbox objects from the 'hitboxes' layer in Tiled """
+        """ Load hitboxes objects from the 'hitboxes' layer. """
         for layer in self.tmx_data.layers:
             if layer.name == "hitboxes":
                 for obj in layer:
@@ -251,6 +244,3 @@ class TileMap:
                         int(obj.height * self.zoom)
                     )
                     self.hitboxes.append(hitbox_rect)
-
-    def get_surface(self):
-        return self.surface
