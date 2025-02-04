@@ -54,10 +54,11 @@ class Player(pygame.sprite.Sprite):
 
         self.idle = [
             pygame.transform.scale(
-                pygame.image.load("sources/img/animations/down1.png").convert_alpha(),
-                (int(pygame.image.load("sources/img/animations/down1.png").get_width() * scale_factor),
-                int(pygame.image.load("sources/img/animations/down1.png").get_height() * scale_factor))
+                pygame.image.load(f"sources/img/animations/idle{i}.png").convert_alpha(),
+                (int(pygame.image.load(f"sources/img/animations/idle{i}.png").get_width() * scale_factor),
+                int(pygame.image.load(f"sources/img/animations/idle{i}.png").get_height() * scale_factor))
             )
+            for i in range(1,3)
         ]
 
         self.counter = 0
