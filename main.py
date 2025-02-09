@@ -24,7 +24,7 @@ clock = pygame.time.Clock()
 running = True
 while running:
     # Calculate delta time (time since last frame)
-    dt = clock.tick(fps) / 1000.0  # Convert milliseconds to seconds
+    dt = clock.tick(fps) / 1000.0
 
     # Handle events
     for event in pygame.event.get():
@@ -37,7 +37,6 @@ while running:
     # Clear the screen
     screen.fill((134, 203, 146))
 
-    # Update and draw sprites
     sprite_group.update(dt)
     sprite_group.custom_draw(player)
 

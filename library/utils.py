@@ -2,7 +2,7 @@ import pygame
 from pytmx.util_pygame import load_pygame
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, pos : tuple, surf : pygame.surface, groups :pygame.sprite.Group):
+    def __init__(self, pos : tuple, surf : pygame.surface, groups : pygame.sprite.Group):
         super().__init__(groups)
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
@@ -72,25 +72,29 @@ class Player(pygame.sprite.Sprite):
 
     def movement_anim(self, direction : int):
         """ Animate the character in function of his movement direction """
-        self.counter += .15
         match (direction):
             case 0:
+                self.counter += .15
                 if self.counter >= len(self.right):
                     self.counter = 0
                 self.image = self.right[int(self.counter)]
             case 1:
+                self.counter += .15
                 if self.counter >= len(self.left):
                     self.counter = 0
                 self.image = self.left[int(self.counter)]
             case 2:
+                self.counter += .15
                 if self.counter >= len(self.down):
                     self.counter = 0
                 self.image = self.down[int(self.counter)]
             case 3:
+                self.counter += .15
                 if self.counter >= len(self.up):
                     self.counter = 0
                 self.image = self.up[int(self.counter)]
             case 5:
+                self.counter += .025
                 if self.counter >= len(self.idle):
                     self.counter = 0
                 self.image = self.idle[int(self.counter)]
@@ -139,7 +143,7 @@ class Player(pygame.sprite.Sprite):
         self.movement_anim(self.anim)
 
 class CameraGroup(pygame.sprite.Group):
-    """ Handle the camera to follow the player when he moves and """
+    """ Handle the camera to follow the player when he moves and create a 3D effect with objects. """
     def __init__(self, surf):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
@@ -162,9 +166,7 @@ class CameraGroup(pygame.sprite.Group):
         self.camera_rect = pygame.Rect(l,t,w,h)
 
     def box_target_camera(self, target):
-        """
-        Follow the player when it reaches the limit of the box.
-        """
+        """ Follow the player when it reaches the limit of the box. """
         if target.rect.left < self.camera_rect.left:
             self.camera_rect.left = target.rect.left
         if target.rect.right > self.camera_rect.right:
@@ -178,7 +180,7 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
     def custom_draw(self, player):
-
+        """ Draw the map with the '3D' objects. """
         self.box_target_camera(player)
 
         #ground
@@ -191,6 +193,7 @@ class CameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image, offset_pos)
 
 class TileMap:
+    """ Render the map, objects and hitboxes. """
     def __init__(self, map_file : str):
         self.tmx_data = load_pygame(map_file)
         self.tile_width = self.tmx_data.tilewidth
@@ -220,14 +223,12 @@ class TileMap:
         for layer in self.tmx_data.layers:
             if layer.name == "trees":
                 for obj in layer:
-                        # Scale the object's image
                         scaled_image = pygame.transform.scale(
                             obj.image,
                             (int(obj.image.get_width() * self.zoom),
                             int(obj.image.get_height() * self.zoom))
                         )
 
-                        # Scale the object's position
                         scaled_pos = (obj.x * self.zoom, obj.y * self.zoom)
 
                         # Create the object
