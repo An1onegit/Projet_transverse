@@ -2,13 +2,13 @@ import pygame
 import math
 import sys
 
-# Initialisation
+# Initialization
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 36)
 
-# Couleurs
+# Colors
 WHITE = (255, 255, 255)
 GREEN = (0, 200, 0)
 YELLOW = (255, 255, 0)
@@ -17,25 +17,25 @@ BLUE = (0, 100, 255)
 GRAY = (150, 150, 150)
 BLACK = (0, 0, 0)
 
-# État du jeu
+# Game state
 game_started = False
 power_selected = False
 angle_selected = False
 
-# Jauge de puissance
+# Launch power
 power_bar_height = 200
 power_bar_y = 200
 power_cursor_y = power_bar_y
 power_speed = 5
 power_direction = 1
 
-# Jauge d'angle
+# Throw angle
 angle = 0
 angle_speed = 0.03
 angle_max = math.pi / 2
 angle_min = 0
 
-# Données du tir
+# Throw data
 power = 0
 v0 = 0
 angle_value = 0
@@ -47,7 +47,6 @@ launch_y = 0
 gravity = 9.81 * 50  # 50 pixels = 1 meter
 landing_distance = None
 
-# Lieux
 ground_level = 500
 
 def reset_game():
@@ -93,7 +92,6 @@ def draw_angle_arc():
     end_y = 400 - 50 * math.sin(math.pi - angle)
     pygame.draw.line(screen, WHITE, (400, 400), (end_x, end_y), 4)
 
-# Boucle principale
 while True:
     dt = clock.tick(60) / 1000
     screen.fill(WHITE)
@@ -163,6 +161,6 @@ while True:
 
             # Message to restart
             restart_text = font.render("Press R to restart", True, BLACK)
-            screen.blit(restart_text, (230, 140))
+            screen.blit(restart_text, (280, 140))
 
     pygame.display.flip()
