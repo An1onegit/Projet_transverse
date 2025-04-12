@@ -1,6 +1,5 @@
 import pygame
 import math
-import sys
 
 class FishingGame:
     def __init__(self, screen, font):
@@ -53,10 +52,35 @@ class FishingGame:
         pygame.draw.rect(self.screen, (255, 255, 255), (450, self.power_cursor_y, 400, 10))
 
     def draw_angle_arc(self):
-        pygame.draw.arc(self.screen, (150, 150, 150), (300, 350, 200, 100), math.pi - self.angle_max, math.pi - self.angle_min, 5)
-        end_x = 400 + 100 * math.cos(math.pi - self.angle)
-        end_y = 400 - 50 * math.sin(math.pi - self.angle)
+        pygame.draw.arc(self.screen, (150, 150, 150), (300, 350, 200, 100), self.angle_min, self.angle_max, 5)
+        end_x = 400 + 100 * math.cos(self.angle)
+        end_y = 400 - 50 * math.sin(self.angle)
         pygame.draw.line(self.screen, (255, 255, 255), (400, 400), (end_x, end_y), 4)
+
+    def draw_trajectory(self):
+        if self.power_selected and self.angle_selected:
+            # Simulate the trajectory of the projectile before launching
+            trajectory_positions = []
+            temp_vx = self.v0 * math.cos(self.angle_value)
+            temp_vy = -self.v0 * math.sin(self.angle_value)
+            temp_x = self.launch_x
+            temp_y = self.launch_y
+
+            # Generate points along the trajectory
+            for t in range(1, 100):
+                # Simple physics calculations
+                time = t * 0.05  # Time step
+                x = temp_x + temp_vx * time
+                y = temp_y + temp_vy * time + 0.5 * self.gravity * time ** 2
+
+                if y >= self.ground_level:
+                    break  # Stop once the projectile hits the ground
+
+                trajectory_positions.append((x, y))
+
+            # Draw the trajectory as a series of circles or a line
+            for pos in trajectory_positions:
+                pygame.draw.circle(self.screen, (255, 255, 0), (int(pos[0]), int(pos[1])), 3)
 
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -94,6 +118,9 @@ class FishingGame:
                 self.angle_speed *= -1
 
         elif self.angle_selected:
+            # Draw trajectory preview before the projectile is launched
+            self.draw_trajectory()
+
             if self.projectile_position is not None:
                 self.vy += self.gravity * dt
                 self.projectile_position[0] += self.vx * dt
@@ -103,7 +130,7 @@ class FishingGame:
                 if self.projectile_position[1] >= self.ground_level:
                     self.projectile_position[1] = self.ground_level
                     self.impact_position = self.projectile_position[:]
-                    self.landing_distance = self.impact_position[0] - 100  # in pixels
+                    self.landing_distance = self.impact_position[0] - self.launch_x  # in pixels
                     self.projectile_position = None
 
 
@@ -132,7 +159,7 @@ def start_fishing_game():
 
     # Run the fishing mini-game
     while True:
-        dt = clock.tick(60) / 1000  # Time step
+        dt = clock.tick(120) / 1000  # Time step
 
         screen.fill((255, 255, 255))  # White background
 
@@ -140,7 +167,9 @@ def start_fishing_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
             fishing_game.handle_input(event)
 
         # Update and render the fishing game
