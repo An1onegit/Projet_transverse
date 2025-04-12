@@ -40,6 +40,7 @@ class FishingGame:
         self.landing_distance = None
 
         self.ground_level = self.screen.get_height() - 200
+        self.throw_power = 800
 
     def draw_background(self):
         self.screen.fill((0, 100, 255))  # Blue sky
@@ -58,29 +59,27 @@ class FishingGame:
         pygame.draw.line(self.screen, (255, 255, 255), (400, 400), (end_x, end_y), 4)
 
     def draw_trajectory(self):
-        if self.power_selected and self.angle_selected:
-            # Simulate the trajectory of the projectile before launching
-            trajectory_positions = []
-            temp_vx = self.v0 * math.cos(self.angle_value)
-            temp_vy = -self.v0 * math.sin(self.angle_value)
-            temp_x = self.launch_x
-            temp_y = self.launch_y
+        trajectory_positions = []
+        temp_vx = self.v0 * math.cos(self.angle_value)
+        temp_vy = -self.v0 * math.sin(self.angle_value)
+        temp_x = self.launch_x
+        temp_y = self.launch_y
 
-            # Generate points along the trajectory
-            for t in range(1, 100):
-                # Simple physics calculations
-                time = t * 0.05  # Time step
-                x = temp_x + temp_vx * time
-                y = temp_y + temp_vy * time + 0.5 * self.gravity * time ** 2
+        # Generate points along the trajectory
+        for t in range(1, 100):
+            # Simple physics calculations
+            time = t * 0.05  # Time step
+            x = temp_x + temp_vx * time
+            y = temp_y + temp_vy * time + 0.5 * self.gravity * time ** 2
 
-                if y >= self.ground_level:
-                    break  # Stop once the projectile hits the ground
+            if y >= self.ground_level:
+                break  # Stop once the projectile hits the ground
 
-                trajectory_positions.append((x, y))
+            trajectory_positions.append((x, y))
 
-            # Draw the trajectory as a series of circles or a line
-            for pos in trajectory_positions:
-                pygame.draw.circle(self.screen, (255, 255, 0), (int(pos[0]), int(pos[1])), 3)
+        # Draw the trajectory as a series of circles or a line
+        for pos in trajectory_positions:
+            pygame.draw.circle(self.screen, (255, 255, 0), (int(pos[0]), int(pos[1])), 3)
 
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -89,15 +88,16 @@ class FishingGame:
                     self.game_started = True
                     self.launch_y = self.ground_level - 10
                     self.projectile_position = [self.launch_x, self.launch_y]
-                elif not self.power_selected:
-                    self.power = (self.power_cursor_y - self.power_bar_y) / self.power_bar_height
-                    self.v0 = 600 * (1 - self.power)  # Adjust the launch speed
-                    self.power_selected = True
                 elif not self.angle_selected:
                     self.angle_value = self.angle
                     self.angle_selected = True
+                elif not self.power_selected:
+                    self.power = (self.power_cursor_y - self.power_bar_y) / self.power_bar_height
+                    self.v0 = self.throw_power * (1 - self.power)  # Adjust the launch speed
+                    self.power_selected = True
                     self.vx = self.v0 * math.cos(self.angle_value)
                     self.vy = -self.v0 * math.sin(self.angle_value)
+                
             elif event.key == pygame.K_r:
                 self.reset_game()
 
@@ -105,22 +105,22 @@ class FishingGame:
         self.draw_background()
         pygame.draw.circle(self.screen, (0, 0, 0), (400, int(self.launch_y)), 5)
 
-        if self.game_started and not self.power_selected:
-            self.draw_power_bar()
-            self.power_cursor_y += self.power_direction * self.power_speed
-            if self.power_cursor_y < self.power_bar_y or self.power_cursor_y > self.power_bar_y + self.power_bar_height - 10:
-                self.power_direction *= -1
-
-        elif self.power_selected and not self.angle_selected:
+        if self.game_started and not self.angle_selected:
             self.draw_angle_arc()
             self.angle += self.angle_speed
             if self.angle > self.angle_max or self.angle < self.angle_min:
                 self.angle_speed *= -1
 
-        elif self.angle_selected:
-            # Draw trajectory preview before the projectile is launched
+        elif self.angle_selected and not self.power_selected:
+            self.draw_power_bar()
+            self.power_cursor_y += self.power_direction * self.power_speed
+            if self.power_cursor_y < self.power_bar_y or self.power_cursor_y > self.power_bar_y + self.power_bar_height - 10:
+                self.power_direction *= -1
+            self.power = (self.power_cursor_y - self.power_bar_y) / self.power_bar_height
+            self.v0 = self.throw_power * (1 - self.power)
             self.draw_trajectory()
 
+        elif self.power_selected:
             if self.projectile_position is not None:
                 self.vy += self.gravity * dt
                 self.projectile_position[0] += self.vx * dt
