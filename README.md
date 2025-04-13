@@ -1,7 +1,7 @@
-# 🎮 Bear's Fishing Empire
+# 🎮 This Bear is Fishing
 
 ## 📖 Project Overview
-Welcome to our **Bear's Fishing Empire** project! 🎉 This project was developed as part of a school assignment to create a fun and interactive 2D game using **Python**. The game features physics mechanics and engaging graphics to deliver an entertaining experience for players.  
+Welcome to our **This Bear is Fishing** project! This project was developed as part of a school assignment to create a fun and interactive 2D game using **Python**. The game features physics mechanics and engaging graphics to deliver an entertaining experience for players.  
 
 ## 🚀 Features
 - 🌀 Realistic 2D physics for immersive gameplay  
@@ -12,7 +12,7 @@ Welcome to our **Bear's Fishing Empire** project! 🎉 This project was develope
 - **Python** 🐍  
 - **Pygame** library 🎮  
 - **pyTMX** to import the map
-- **math** to do the calculations
+- **math** to do the physics calculations
 
 ## 🕹️ How to Play
 1. Clone the repository:  
@@ -42,4 +42,6 @@ Here’s what our game looks like:
 
 
 ## ✨ Future Improvements
-- 🚀 Expand with new levels and challenges  
+- 🚀 Expand with new maps and challenges  
+- 🎣 Add some fishing rods and fishes to get
+- ⬇️ Release on Steam !!
