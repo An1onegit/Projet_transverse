@@ -122,6 +122,13 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = -1
             self.anim = 3
 
+    def check_interactions(self, interaction_zones):
+        for zone in interaction_zones:
+            if self.rect.colliderect(zone["rect"]):
+                return zone  # Return the zone we're interacting with
+        return None
+
+
     def update(self, dt):
         """ Handle the inputs, the collisions and the animations. """
         self.input()
@@ -138,7 +145,7 @@ class Player(pygame.sprite.Sprite):
         # Check collision with a hitbox
         if not any(new_rect.colliderect(hitbox) for hitbox in self.hitboxes):
             self.position = new_position
-
+        
         self.rect.center = self.position
         self.movement_anim(self.anim)
 
@@ -207,7 +214,6 @@ class TileMap:
         self.zoom = 2.5
 
         self.hitboxes = []
-
         self.load_hitboxes()
 
     def render_to_surface(self):
@@ -246,3 +252,24 @@ class TileMap:
                         int(obj.height * self.zoom)
                     )
                     self.hitboxes.append(hitbox_rect)
+    
+    def load_interaction_zones(self):
+        interaction_zones = []
+
+        for obj in self.tmx_data.objects:
+            if obj.type in ["fishing", "npc"]:
+                interaction = {
+                    "rect": pygame.Rect(
+                        int(obj.x * self.zoom), 
+                        int(obj.y * self.zoom), 
+                        int(obj.width * self.zoom), 
+                        int(obj.height * self.zoom)
+                    ),
+                    "type": obj.type,
+                    "name": obj.name,
+                    "message": obj.properties.get("message", "Press E to interact"),
+                }
+                print("interact added !")
+                interaction_zones.append(interaction)
+
+        return interaction_zones

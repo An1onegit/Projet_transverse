@@ -14,6 +14,8 @@ def Main():
 
     sprite_group = CameraGroup(map_surface)
     tile_map.render_objects(sprite_group)
+    interaction_zones = tile_map.load_interaction_zones()
+    
 
     player = Player(pos=(3500, 3500), groups=sprite_group, hitboxes=tile_map.hitboxes)
 
@@ -47,7 +49,9 @@ def Main():
                         fishing_game.reset_game()
                 else:
                     player.anim = 5
-                    
+
+        interaction = player.check_interactions(interaction_zones)
+   
 
         if fishing_mode:
             fishing_game.update(dt)
@@ -56,7 +60,18 @@ def Main():
             sprite_group.update(dt)
             sprite_group.custom_draw(player)
 
-        screen.blit(text, ((screen.get_width() // 2) - text.get_width() // 2,  screen.get_height() - 250))
+            if interaction:
+                # Show prompt text
+                message_surface = font.render(interaction["message"], True, (255, 255, 255))
+                screen.blit(message_surface, ((screen.get_width() // 2) - message_surface.get_width() // 2, screen.get_height() - 250))
+
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_e]:  # 'E' for interact
+                    if interaction["type"] == "fishing":
+                        fishing_mode = True  
+                    #elif interaction["type"] == "npc":
+                    #    open_npc_dialog(interaction)  # Later: open a trade dialog
+
    
         pygame.display.flip()
 
