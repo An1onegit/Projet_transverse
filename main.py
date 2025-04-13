@@ -19,6 +19,7 @@ def Main():
 
     # Fishing mini-game setup
     font = pygame.font.SysFont(None, 36)
+    text = font.render("Interact (E)", True, (255,255,255))
     fishing_game = FishingGame(screen, font)
     fishing_mode = False
 
@@ -46,6 +47,7 @@ def Main():
                         fishing_game.reset_game()
                 else:
                     player.anim = 5
+                    
 
         if fishing_mode:
             fishing_game.update(dt)
@@ -54,7 +56,8 @@ def Main():
             sprite_group.update(dt)
             sprite_group.custom_draw(player)
 
-
+        screen.blit(text, ((screen.get_width() // 2) - text.get_width() // 2,  screen.get_height() - 250))
+   
         pygame.display.flip()
 
     pygame.quit()

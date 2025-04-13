@@ -174,11 +174,6 @@ def start_fishing_game():
 
         # Update and render the fishing game
         fishing_game.update(dt)
-
-        fps = clock.get_fps()
-        fps_text = font.render(f"FPS: {int(fps)}", True, (0, 0, 0))
-        screen.blit(fps_text, (1000, 1000))
-
         pygame.display.flip()
 
 if __name__ == "__main__":
