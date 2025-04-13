@@ -44,9 +44,6 @@ def Main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         running = False
-                    elif event.key == pygame.K_f:
-                        fishing_mode = True
-                        fishing_game.reset_game()
                 else:
                     player.anim = 5
 
@@ -66,9 +63,10 @@ def Main():
                 screen.blit(message_surface, ((screen.get_width() // 2) - message_surface.get_width() // 2, screen.get_height() - 250))
 
                 keys = pygame.key.get_pressed()
-                if keys[pygame.K_e]:  # 'E' for interact
+                if keys[pygame.K_e]:
                     if interaction["type"] == "fishing":
-                        fishing_mode = True  
+                        fishing_mode = True
+                        fishing_game.reset_game()  
                     #elif interaction["type"] == "npc":
                     #    open_npc_dialog(interaction)  # Later: open a trade dialog
 
