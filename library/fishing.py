@@ -1,180 +1,248 @@
 import pygame
 import math
+import random
 
-class FishingGame:
+GRAVITY = 9.81 * 50
+ENERGY_LOSS_FACTOR = 0.7
+MAX_BOUNCES = 3
+FISH_GAME_TIME = 30
+FISH_BAR_SPEED = 300
+
+class SplashParticle:
+    def __init__(self, x, y, dx, dy):
+        self.x = x
+        self.y = y
+        self.dx = dx
+        self.dy = dy
+        self.life = 1.0
+
+    def update(self, dt):
+        self.x += self.dx * dt
+        self.y += self.dy * dt
+        self.dy += GRAVITY * dt * 0.5
+        self.life -= dt * 2
+
+    def draw(self, screen):
+        if self.life > 0:
+            pygame.draw.circle(screen, (255, 255, 255), (int(self.x), int(self.y)), 2)
+
+class FishingMiniGame:
     def __init__(self, screen, font):
         self.screen = screen
         self.font = font
-        self.reset_game()
+        self.width, self.height = screen.get_size()
 
-    def reset_game(self):
-        # Game state
-        self.game_started = False
-        self.power_selected = False
-        self.angle_selected = False
+        self.bar_width = int(self.width * 0.1)
+        self.bar_height = int(self.height * 0.04)
+        self.cursor_width = int(self.bar_width * 0.05)
 
-        # Launch power
-        self.power_bar_height = 200
-        self.power_bar_y = 200
-        self.power_cursor_y = self.power_bar_y
-        self.power_speed = 5
-        self.power_direction = 1
+        self.min_x = int(self.width * 0.3)
+        self.max_x = int(self.width * 0.7)
+        self.cursor_x = self.min_x
+        self.cursor_speed = 0
+        self.fish_x = random.randint(self.min_x, self.max_x - self.bar_width)
 
-        # Throw angle
-        self.angle = 0
-        self.angle_speed = 0.03
-        self.angle_max = math.pi / 2
-        self.angle_min = 0
+        self.bar_fill = 0.0
+        self.bar_direction = 1
+        self.success = False
+        self.total_time = 0
+        self.active = False
 
-        # Throw data
-        self.power = 0
-        self.v0 = 0
-        self.angle_value = 0
+    def start(self):
+        self.active = True
+        self.total_time = 0
+        self.success = False
+        self.cursor_x = self.min_x
+        self.fish_x = random.randint(self.min_x, self.max_x - self.bar_width)
+        self.bar_fill = 0.0
+
+    def update(self, dt, keys):
+        if not self.active:
+            return
+
+        self.total_time += dt
+        if self.total_time > FISH_GAME_TIME:
+            self.active = False
+            return
+
+        if keys[pygame.K_SPACE]:
+            self.cursor_speed += 10000 * dt
+        else:
+            self.cursor_speed -= 8500 * dt
+
+        self.cursor_x += self.cursor_speed * dt
+        self.cursor_speed *= 0.9
+        self.cursor_x = max(self.min_x, min(self.max_x, self.cursor_x))
+
+        self.fish_x += FISH_BAR_SPEED * self.bar_direction * dt
+        if self.fish_x < self.min_x or self.fish_x > self.max_x - self.bar_width:
+            self.bar_direction *= -1
+
+        in_bar = self.fish_x <= self.cursor_x <= self.fish_x + self.bar_width
+        if in_bar:
+            self.bar_fill += dt * 0.5
+        else:
+            self.bar_fill -= dt * 0.3
+
+        self.bar_fill = max(0.0, min(1.0, self.bar_fill))
+
+        if self.bar_fill >= 1.0:
+            self.success = True
+            self.active = False
+
+    def draw(self):
+        if not self.active:
+            return
+
+        y_pos = int(self.height * 0.2)
+        fill_bar_y = int(self.height * 0.3)
+
+        pygame.draw.rect(self.screen, (30, 30, 30), (self.fish_x, y_pos, self.bar_width, self.bar_height))
+        pygame.draw.rect(self.screen, (200, 200, 0), (self.cursor_x, y_pos, self.cursor_width, self.bar_height))
+
+        fill_width = int((self.max_x - self.min_x) * self.bar_fill)
+        pygame.draw.rect(self.screen, (100, 255, 100), (self.min_x, fill_bar_y, fill_width, 30))
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.min_x, fill_bar_y, self.max_x - self.min_x, 30), 2)
+
+        self.screen.blit(self.font.render("Fishing...", True, (0, 0, 0)), (self.min_x, fill_bar_y + 40))
+        if self.success:
+            self.screen.blit(self.font.render("You caught a fish!", True, (0, 100, 0)), (self.min_x, fill_bar_y + 80))
+
+class FishingGame:
+    def __init__(self, screen, font, max_strength=2000):
+        self.screen = screen
+        self.font = font
+        self.max_strength = max_strength
+        self.width, self.height = screen.get_size()
+        self.reset()
+
+    def reset(self):
         self.projectile_position = None
-        self.impact_position = None
         self.vx = 0
         self.vy = 0
-        self.launch_y = 0
-        self.launch_x = 400
-        self.gravity = 9.81 * 50  # 50 pixels = 1 meter
-        self.landing_distance = None
 
-        self.ground_level = self.screen.get_height() - 200
-        self.throw_power = 800
+        self.ground_level = self.height - int(self.height * 0.2)
+        self.water_start_x = self.width // 2
+        self.launch_x = int(self.width * 0.2)
+        self.launch_y = self.ground_level - 10
 
-    def draw_background(self):
-        self.screen.fill((0, 100, 255))  # Blue sky
-        pygame.draw.rect(self.screen, (0, 200, 0), (0, self.ground_level, self.screen.get_width(), self.screen.get_height()))  # Green ground
+        self.angle = 0
+        self.v0 = 1000
+        self.throwing = False
+        self.bounces = 0
+        self.splashes = []
+        self.fishing_game = FishingMiniGame(self.screen, self.font)
+        self.thrown = False
+        self.angle_timer = 0.0
+        self.strength_timer = 0.0
+        self.aiming_angle = True
+        self.angle_deg = 0
+        self.charge_strength = 0
 
-    def draw_power_bar(self):
-        pygame.draw.rect(self.screen, (200, 0, 0), (500, self.power_bar_y, 300, self.power_bar_height // 3))
-        pygame.draw.rect(self.screen, (255, 255, 0), (500, self.power_bar_y + self.power_bar_height // 3, 300, self.power_bar_height // 3))
-        pygame.draw.rect(self.screen, (0, 200, 0), (500, self.power_bar_y + 2 * self.power_bar_height // 3, 300, self.power_bar_height // 3))
-        pygame.draw.rect(self.screen, (255, 255, 255), (450, self.power_cursor_y, 400, 10))
-
-    def draw_angle_arc(self):
-        pygame.draw.arc(self.screen, (150, 150, 150), (300, 350, 200, 100), self.angle_min, self.angle_max, 5)
-        end_x = 400 + 100 * math.cos(self.angle)
-        end_y = 400 - 50 * math.sin(self.angle)
-        pygame.draw.line(self.screen, (255, 255, 255), (400, 400), (end_x, end_y), 4)
-
-    def draw_trajectory(self):
-        trajectory_positions = []
-        temp_vx = self.v0 * math.cos(self.angle_value)
-        temp_vy = -self.v0 * math.sin(self.angle_value)
-        temp_x = self.launch_x
-        temp_y = self.launch_y
-
-        # Generate points along the trajectory
-        for t in range(1, 100):
-            # Simple physics calculations
-            time = t * 0.05  # Time step
-            x = temp_x + temp_vx * time
-            y = temp_y + temp_vy * time + 0.5 * self.gravity * time ** 2
-
-            if y >= self.ground_level:
-                break  # Stop once the projectile hits the ground
-
-            trajectory_positions.append((x, y))
-
-        # Draw the trajectory as a series of circles or a line
-        for pos in trajectory_positions:
-            pygame.draw.circle(self.screen, (255, 255, 0), (int(pos[0]), int(pos[1])), 3)
+    def reset_game(self):
+        self.reset()
 
     def handle_input(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                if not self.game_started:
-                    self.game_started = True
-                    self.launch_y = self.ground_level - 10
-                    self.projectile_position = [self.launch_x, self.launch_y]
-                elif not self.angle_selected:
-                    self.angle_value = self.angle
-                    self.angle_selected = True
-                elif not self.power_selected:
-                    self.power = (self.power_cursor_y - self.power_bar_y) / self.power_bar_height
-                    self.v0 = self.throw_power * (1 - self.power)  # Adjust the launch speed
-                    self.power_selected = True
-                    self.vx = self.v0 * math.cos(self.angle_value)
-                    self.vy = -self.v0 * math.sin(self.angle_value)
-                
-            elif event.key == pygame.K_r:
-                self.reset_game()
+        if not self.throwing and not self.fishing_game.active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if self.aiming_angle:
+                        self.angle_deg = abs(math.sin(self.angle_timer * 2)) * 80 + 5
+                        self.aiming_angle = False
+                        self.angle_timer = 0.0
+                    else:
+                        self.charge_strength = abs(math.sin(self.strength_timer * 2)) * self.max_strength
+                        self.start_throw()
+
+    def start_throw(self):
+        angle_rad = math.radians(self.angle_deg)
+        self.vx = self.charge_strength * math.cos(angle_rad)
+        self.vy = -self.charge_strength * math.sin(angle_rad)
+        self.projectile_position = [self.launch_x, self.launch_y]
+        self.throwing = True
+        self.bounces = 0
+        self.splashes.clear()
+        self.thrown = True
 
     def update(self, dt):
-        self.draw_background()
-        pygame.draw.circle(self.screen, (0, 0, 0), (400, int(self.launch_y)), 5)
+        keys = pygame.key.get_pressed()
 
-        if self.game_started and not self.angle_selected:
-            self.draw_angle_arc()
-            self.angle += self.angle_speed
-            if self.angle > self.angle_max or self.angle < self.angle_min:
-                self.angle_speed *= -1
+        if not self.throwing and not self.fishing_game.active:
+            if self.aiming_angle:
+                self.angle_timer += dt
+            else:
+                self.strength_timer += dt
 
-        elif self.angle_selected and not self.power_selected:
-            self.draw_power_bar()
-            self.power_cursor_y += self.power_direction * self.power_speed
-            if self.power_cursor_y < self.power_bar_y or self.power_cursor_y > self.power_bar_y + self.power_bar_height - 10:
-                self.power_direction *= -1
-            self.power = (self.power_cursor_y - self.power_bar_y) / self.power_bar_height
-            self.v0 = self.throw_power * (1 - self.power)
-            self.draw_trajectory()
+        if self.throwing and self.projectile_position:
+            self.vy += GRAVITY * dt
+            self.projectile_position[0] += self.vx * dt
+            self.projectile_position[1] += self.vy * dt
 
-        elif self.power_selected:
-            if self.projectile_position is not None:
-                self.vy += self.gravity * dt
-                self.projectile_position[0] += self.vx * dt
-                self.projectile_position[1] += self.vy * dt
-                pygame.draw.circle(self.screen, (200, 0, 0), (int(self.projectile_position[0]), int(self.projectile_position[1])), 5)
+            x, y = self.projectile_position
+            hit_ground = y >= self.ground_level
+            hit_water = x > self.water_start_x and y >= self.ground_level
 
-                if self.projectile_position[1] >= self.ground_level:
-                    self.projectile_position[1] = self.ground_level
-                    self.impact_position = self.projectile_position[:]
-                    self.landing_distance = self.impact_position[0] - self.launch_x  # in pixels
-                    self.projectile_position = None
+            if hit_ground:
+                self.projectile_position[1] = self.ground_level
+                self.bounces += 1
 
+                if hit_water:
+                    for _ in range(10):
+                        dx = random.uniform(-100, 100)
+                        dy = random.uniform(-300, -100)
+                        self.splashes.append(SplashParticle(x, self.ground_level, dx, dy))
 
-            elif self.impact_position is not None:
-                pygame.draw.circle(self.screen, (200, 0, 0), (int(self.impact_position[0]), int(self.impact_position[1])), 5)
+                self.vy = -self.vy * ENERGY_LOSS_FACTOR
+                self.vx = self.vx * ENERGY_LOSS_FACTOR
 
-                # Convert landing distance from pixels to meters
-                landing_distance_in_meters = self.landing_distance / 50  # 1 meter = 50 pixels
+                if abs(self.vy) < 100 or self.bounces > MAX_BOUNCES:
+                    self.throwing = False
+                    if hit_water:
+                        self.fishing_game.start()
 
-                # Display landing distance in meters
-                text = self.font.render(f"Distance: {landing_distance_in_meters:.2f} meters", True, (0, 0, 0))
-                self.screen.blit(text, (-100 + self.screen.get_width() // 2, -100 + self.screen.get_height() // 2))
+        for splash in self.splashes:
+            splash.update(dt)
+        self.splashes = [s for s in self.splashes if s.life > 0]
 
-                # Message to restart
-                restart_text = self.font.render("Press R to restart", True, (0, 0, 0))
-                self.screen.blit(restart_text, (-100 + self.screen.get_width() // 2, self.screen.get_height() // 2))
+        self.fishing_game.update(dt, keys)
 
-def start_fishing_game():
-    pygame.init()
-    screen = pygame.display.set_mode((1920, 1080))
-    clock = pygame.time.Clock()
-    font = pygame.font.SysFont(None, 36)
+    def draw(self):
+        self.screen.fill((135, 206, 235))
+        pygame.draw.rect(self.screen, (34, 139, 34), (0, self.ground_level, self.water_start_x, self.height - self.ground_level))
+        pygame.draw.rect(self.screen, (0, 105, 148), (self.water_start_x, self.ground_level, self.width - self.water_start_x, self.height - self.ground_level))
 
-    # Create the FishingGame object
-    fishing_game = FishingGame(screen, font)
+        pygame.draw.circle(self.screen, (0, 0, 0), (self.launch_x, int(self.launch_y)), 6)
 
-    # Run the fishing mini-game
-    while True:
-        dt = clock.tick(120) / 1000  # Time step
+        if not self.throwing and not self.fishing_game.active:
+            if self.aiming_angle:
+                current_angle = abs(math.sin(self.angle_timer * 2)) * 80 + 5
+                angle_rad = math.radians(current_angle)
+            else:
+                current_angle = self.angle_deg
+                current_strength = abs(math.sin(self.strength_timer * 2)) * self.max_strength
 
-        screen.fill((255, 255, 255))  # White background
+                # Draw strength bar near launcher
+                bar_x = self.launch_x - 50
+                bar_y = self.launch_y + 40
+                bar_width = 150
+                bar_height = 20
+                fill_width = int((current_strength / self.max_strength) * bar_width)
+                pygame.draw.rect(self.screen, (0, 0, 0), (bar_x, bar_y, bar_width, bar_height), 2)
+                pygame.draw.rect(self.screen, (255, 0, 0), (bar_x, bar_y, fill_width, bar_height))
+                self.screen.blit(self.font.render("Strength", True, (0, 0, 0)), (bar_x, bar_y - 25))
 
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-            fishing_game.handle_input(event)
+                angle_rad = math.radians(current_angle)
 
-        # Update and render the fishing game
-        fishing_game.update(dt)
-        pygame.display.flip()
+            line_len = int(self.height * 0.2)
+            end_x = self.launch_x + math.cos(angle_rad) * line_len
+            end_y = self.launch_y - math.sin(angle_rad) * line_len
+            pygame.draw.line(self.screen, (0, 0, 0), (self.launch_x, self.launch_y), (end_x, end_y), 2)
+            self.screen.blit(self.font.render(f"Angle: {int(current_angle)}°", True, (0, 0, 0)), (self.launch_x - 50, self.launch_y - 60))
 
-if __name__ == "__main__":
-    start_fishing_game()
+        if self.projectile_position:
+            pygame.draw.circle(self.screen, (255, 50, 50), (int(self.projectile_position[0]), int(self.projectile_position[1])), 6)
+
+        for splash in self.splashes:
+            splash.draw(self.screen)
+
+        self.fishing_game.draw()

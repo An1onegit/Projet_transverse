@@ -48,29 +48,29 @@ def Main():
                     player.anim = 5
 
         interaction = player.check_interactions(interaction_zones)
-   
 
         if fishing_mode:
             fishing_game.update(dt)
+            screen.fill((134, 203, 146))  # Background color during fishing
+            fishing_game.draw()          # Draw the fishing mini-game
         else:
             screen.fill((134, 203, 146))
             sprite_group.update(dt)
             sprite_group.custom_draw(player)
 
             if interaction:
-                # Show prompt text
                 message_surface = font.render(interaction["message"], True, (255, 255, 255))
-                screen.blit(message_surface, ((screen.get_width() // 2) - message_surface.get_width() // 2, screen.get_height() - 250))
+                screen.blit(
+                    message_surface,
+                    ((screen.get_width() // 2) - message_surface.get_width() // 2, screen.get_height() - 250)
+                )
 
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_e]:
                     if interaction["type"] == "fishing":
                         fishing_mode = True
                         fishing_game.reset_game()  
-                    #elif interaction["type"] == "npc":
-                    #    open_npc_dialog(interaction)  # Later: open a trade dialog
 
-   
         pygame.display.flip()
 
     pygame.quit()
