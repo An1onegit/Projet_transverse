@@ -66,9 +66,9 @@ class FishingMiniGame:
             return
 
         if keys[pygame.K_SPACE]:
-            self.cursor_speed += 10000 * dt
+            self.cursor_speed += 8500 * dt
         else:
-            self.cursor_speed -= 8500 * dt
+            self.cursor_speed -= 7300 * dt
 
         self.cursor_x += self.cursor_speed * dt
         self.cursor_speed *= 0.9
@@ -109,7 +109,7 @@ class FishingMiniGame:
             self.screen.blit(self.font.render("You caught a fish!", True, (0, 100, 0)), (self.min_x, fill_bar_y + 80))
 
 class FishingGame:
-    def __init__(self, screen, font, max_strength=2000):
+    def __init__(self, screen, font, max_strength=1000):
         self.screen = screen
         self.font = font
         self.max_strength = max_strength
