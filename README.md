@@ -32,6 +32,9 @@ Welcome to our **This Bear is Fishing** project! This project was developed as p
 
 ## 🖼️ Screenshots  
 Here’s what our game looks like:  
+
+[![Watch the video](https://img.youtube.com/vi/tvs0mDGeDno/0.jpg)]((https://youtu.be/tvs0mDGeDno))
+
 - **Main Menu:**  
   ![image](https://github.com/user-attachments/assets/8a7ea887-48be-4d62-ba5a-ad7970a0af38)
 
@@ -39,6 +42,8 @@ Here’s what our game looks like:
   ![image](https://github.com/user-attachments/assets/5e21e08b-bfe4-4ce8-be92-523cccaa72a7)
 
   ![image](https://github.com/user-attachments/assets/14019fb9-a708-4d42-b65c-7342b6e174df)
+
+  
 
 
 ## ✨ Future Improvements
