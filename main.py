@@ -1,6 +1,8 @@
 import pygame
 from library.utils import *
 from library.fishing import FishingGame
+from library.preMenu import start_menu
+from library.menu import MainMenu
 
 def Main():
     # Pygame setup
@@ -76,4 +78,4 @@ def Main():
     pygame.quit()
 
 if __name__ == "__main__":
-    Main()
+    start_menu(lambda: MainMenu(Main))

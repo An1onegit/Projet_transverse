@@ -267,5 +267,3 @@ class FishingGame:
             pygame.draw.circle(self.screen, (255, 255, 255), (splash_x, splash_y), 2)
 
         self.fishing_game.draw()
-
-        

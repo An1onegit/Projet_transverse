@@ -1,6 +1,6 @@
 import pygame
 
-def MainMenu():
+def MainMenu(mainGame):
     # pygame setup
     pygame.init()
     screen = pygame.display.set_mode((1920, 1080))
@@ -19,8 +19,6 @@ def MainMenu():
 
     running = True
     while running:
-        # poll for events
-        # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -29,16 +27,15 @@ def MainMenu():
                     running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_btn.collidepoint(event.pos):
-                    return True
+                    mainGame()
                 if settings_btn.collidepoint(event.pos):
+                    # play settings screen
                     pass
                 if quit_btn.collidepoint(event.pos):
                     running = False
 
-        # fill the screen with a color to wipe away anything from last frame
         screen.fill((184, 111, 82))
 
-        # RENDER YOUR GAME HERE
         screen.blit(title, (600,150))
         pygame.draw.rect(screen, (35, 28, 7), play_btn)
         pygame.draw.rect(screen, (35, 28, 7), settings_btn)
@@ -47,10 +44,9 @@ def MainMenu():
         screen.blit(settings_txt, (settings_btn.x,settings_btn.y))
         screen.blit(quit_txt, (quit_btn.x,quit_btn.y))
 
-        # flip() the display to put your work on screen
         pygame.display.flip()
 
-        clock.tick(60)  # limits FPS to 60
+        clock.tick(120)
 
     pygame.quit()
 
