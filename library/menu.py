@@ -1,54 +1,75 @@
+#menu projet transverse
+
 import pygame
+import button
 
-def MainMenu(mainGame):
-    # pygame setup
-    pygame.init()
-    screen = pygame.display.set_mode((1920, 1080))
-    clock = pygame.time.Clock()
-    title_font = pygame.font.SysFont('Calibri', 100)
-    font = pygame.font.SysFont('Calibri', 50)
+pygame. init()
 
-    title = title_font.render("Bear's fishing Empire", True, "BLACK")
-    play_btn = pygame.Rect(810,500,300,60)
-    play_txt = font.render("Play", True, (247, 135, 100))
-    settings_btn = pygame.Rect(810,570,300,60)
-    settings_txt = font.render("Settings", True, (247, 135, 100))
-    quit_btn = pygame.Rect(810,640,300,60)
-    quit_txt = font.render("Quit", True, (247, 135, 100))
+#creation of game window 
+SCREEN_WIDTH = 1442
+SCREEN_HEIGHT = 800
 
+#game variables
+game_paused = False
 
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if play_btn.collidepoint(event.pos):
-                    mainGame()
-                if settings_btn.collidepoint(event.pos):
-                    # play settings screen
-                    pass
-                if quit_btn.collidepoint(event.pos):
-                    running = False
+screen = pygame. display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("main menu")
 
-        screen.fill((184, 111, 82))
+#definition fonts 
+font = pygame.font.SysFont("Arial Black", 40)
 
-        screen.blit(title, (600,150))
-        pygame.draw.rect(screen, (35, 28, 7), play_btn)
-        pygame.draw.rect(screen, (35, 28, 7), settings_btn)
-        pygame.draw.rect(screen, (35, 28, 7), quit_btn)
-        screen.blit(play_txt, (play_btn.x,play_btn.y))
-        screen.blit(settings_txt, (settings_btn.x,settings_btn.y))
-        screen.blit(quit_txt, (quit_btn.x,quit_btn.y))
+#define colors
+TEXT_COLOR = (255, 255, 255)
 
-        pygame.display.flip()
+#load images
+play_img = pygame.image.load("images_menu/bouton_PLAY.png").convert_alpha()
+quit_img = pygame.image.load("images_menu/bouton_QUIT.png").convert_alpha()
+settings_img = pygame.image.load("images_menu/bouton_SETTINGS.png").convert_alpha()
+tutorial_img = pygame.image.load("images_menu/bouton_TUTORIAL.png").convert_alpha()
 
-        clock.tick(120)
-
-    pygame.quit()
+#create button instance
+play_button = button.Button(580, 350, play_img, 0.86)
+quit_button = button.Button(580, 450, quit_img, 0.86)
+settings_button = button.Button(580, 550, settings_img, 0.86)
+tutorial_button = button.Button(580, 650, tutorial_img, 0.86)
 
 
-#MainMenu()
+
+def draw_text(text, font,text_col, x, y):
+    image = font.render(text, True, text_col)
+    screen.blit(image, (x,y))
+
+#game loop
+run = True 
+while run: 
+
+    screen.fill((177,235,52))
+
+    #checking if game is paused
+    if game_paused == True: 
+        if play_button.draw(screen):
+            game_paused = False
+        if quit_button.draw(screen):
+            run = False
+        if settings_button.draw(screen):
+            pass
+        if tutorial_button.draw(screen):    
+            pass
+    else:
+        draw_text("hey hey hey!", font, TEXT_COLOR, 600, 250)
+
+    #event handler 
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                game_paused = True
+
+        if event.type == pygame.QUIT:
+            run = False
+
+    pygame.display.update()
+
+pygame.quit()
+
+
+
