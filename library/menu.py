@@ -1,7 +1,7 @@
 #menu projet transverse
 
 import pygame
-import button
+from button import Button
 
 pygame. init()
 
@@ -22,16 +22,16 @@ font = pygame.font.SysFont("Arial Black", 40)
 TEXT_COLOR = (255, 255, 255)
 
 #load images
-play_img = pygame.image.load("images_menu/bouton_PLAY.png").convert_alpha()
-quit_img = pygame.image.load("images_menu/bouton_QUIT.png").convert_alpha()
-settings_img = pygame.image.load("images_menu/bouton_SETTINGS.png").convert_alpha()
-tutorial_img = pygame.image.load("images_menu/bouton_TUTORIAL.png").convert_alpha()
+play_img = pygame.image.load("sources/img/bouton_PLAY.png").convert_alpha()
+quit_img = pygame.image.load("sources/img/bouton_QUIT.png").convert_alpha()
+settings_img = pygame.image.load("sources/img/bouton_SETTINGS.png").convert_alpha()
+tutorial_img = pygame.image.load("sources/img/bouton_TUTORIAL.png").convert_alpha()
 
 #create button instance
-play_button = button.Button(580, 350, play_img, 0.86)
-quit_button = button.Button(580, 450, quit_img, 0.86)
-settings_button = button.Button(580, 550, settings_img, 0.86)
-tutorial_button = button.Button(580, 650, tutorial_img, 0.86)
+play_button = Button(580, 350, play_img, 0.86)
+quit_button = Button(580, 450, quit_img, 0.86)
+settings_button = Button(580, 550, settings_img, 0.86)
+tutorial_button = Button(580, 650, tutorial_img, 0.86)
 
 
 
@@ -70,6 +70,3 @@ while run:
     pygame.display.update()
 
 pygame.quit()
-
-
-
