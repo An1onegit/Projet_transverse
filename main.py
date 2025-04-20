@@ -3,6 +3,8 @@ from library.utils import *
 from library.fishing import FishingGame
 from library.preMenu import start_menu
 from library.menu import MainMenu
+from library.shopping import ShopMenu
+from library.sell import SellMenu
 
 def Main():
     # Pygame setup
@@ -72,6 +74,8 @@ def Main():
                     if interaction["type"] == "fishing":
                         fishing_mode = True
                         fishing_game.reset_game()  
+                    if interaction["type"] == "npc":
+                        SellMenu()
 
         pygame.display.flip()
 
