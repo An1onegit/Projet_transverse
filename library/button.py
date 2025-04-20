@@ -1,6 +1,5 @@
 import pygame
 
-#button class
 class Button():
 	def __init__(self, x, y, image, scale):
 		width = image.get_width()
@@ -12,10 +11,8 @@ class Button():
 
 	def draw(self, surface):
 		action = False
-		#get mouse position
 		pos = pygame.mouse.get_pos()
 
-		#check mouseover and clicked conditions
 		if self.rect.collidepoint(pos):
 			if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
 				self.clicked = True
@@ -24,7 +21,6 @@ class Button():
 		if pygame.mouse.get_pressed()[0] == 0:
 			self.clicked = False
 
-		#draw button on screen
 		surface.blit(self.image, (self.rect.x, self.rect.y))
 
 		return action

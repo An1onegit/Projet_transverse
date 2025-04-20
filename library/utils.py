@@ -269,7 +269,6 @@ class TileMap:
                     "name": obj.name,
                     "message": obj.properties.get("message", "Press E to interact"),
                 }
-                print("interact added !")
                 interaction_zones.append(interaction)
 
         return interaction_zones

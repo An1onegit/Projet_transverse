@@ -78,4 +78,5 @@ def Main():
     pygame.quit()
 
 if __name__ == "__main__":
-    start_menu(lambda: MainMenu(Main))
+    #start_menu(lambda: MainMenu(Main))
+    Main()
