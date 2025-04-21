@@ -20,4 +20,7 @@ class Inventory:
             self.rods.append(rod_name)
             return True
         return False
+
+    def add_money(self):
+        self.money += 1000
     

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="69" height="61" tilewidth="32" tileheight="32" infinite="0" nextlayerid="27" nextobjectid="85">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="69" height="61" tilewidth="32" tileheight="32" infinite="0" nextlayerid="27" nextobjectid="86">
  <tileset firstgid="1" source="tuiles.tsx"/>
  <tileset firstgid="65" source="TX Plant.tsx"/>
  <tileset firstgid="321" source="TX Props.tsx"/>
@@ -926,7 +926,7 @@
     <property name="message" value="Press E to fish"/>
    </properties>
   </object>
-  <object id="82" name="First Npc" type="npc" x="2014" y="1762" width="36" height="26">
+  <object id="82" name="First Npc" type="sell" x="2014" y="1762" width="36" height="26">
    <properties>
     <property name="message" value="Press E to talk to Samy"/>
    </properties>
@@ -935,6 +935,11 @@
   <object id="84" name="fishing spot 1" type="fishing" x="1928.5" y="1544" width="143" height="28">
    <properties>
     <property name="message" value="Press E to fish"/>
+   </properties>
+  </object>
+  <object id="85" name="Shopping spot" type="shop" x="1831" y="1599" width="56" height="31">
+   <properties>
+    <property name="message" value="Press E to buy new rods"/>
    </properties>
   </object>
  </objectgroup>

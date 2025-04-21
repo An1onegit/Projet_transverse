@@ -44,10 +44,35 @@ def Main():
 
     for key in FISH_IMAGES:
         FISH_IMAGES[key] = pygame.transform.scale(FISH_IMAGES[key], (40, 40))
+    FISH_PRICES = {
+        "Small Carp": 5,
+        "Tiny Bass": 7,
+        "Minnow": 10,
+        "Bluegill": 15,
+        "Pike": 20,
+        "Perch": 25,
+        "Golden Trout": 40,
+        "Catfish": 50,
+        "Silver Salmon": 60,
+        "Giant Tuna": 80,
+        "Swordfish": 100,
+        "Mahi-Mahi": 120,
+        "Ancient Coelacanth": 200,
+        "Mythical Leviathan": 500,
+        "Rainbow Koi": 1000
+    }
+
     fishing_game = FishingGame(screen, font, inventory, FISH_IMAGES)
     fishing_mode = False
     inventory_open = False
     selling_open = False
+    shopping_open = False
+
+    ROD_SHOP = {
+        "Advanced Rod":100,
+        "Super Rod": 300,
+        "Legendary Rod": 1000
+    }
 
     fps = 120
     clock = pygame.time.Clock()
@@ -74,24 +99,40 @@ def Main():
                         inventory_open = not inventory_open
                     if event.key == pygame.K_e:
                         if interaction:
-                            if interaction["type"] == "npc":
+                            if interaction["type"] == "sell":
                                 selling_open = not selling_open
                                 inventory_open = False
                             elif interaction["type"] == "fishing":
                                 fishing_mode = True
                                 fishing_game.reset_game()
+                            elif interaction["type"] == "shop":
+                                shopping_open = not shopping_open
+                                inventory_open = False
                 else:
                     player.anim = 5
-            if event.type == pygame.MOUSEBUTTONDOWN and selling_open:
-                for idx, fish in enumerate(inventory.fishes):
-                    fish_x = panel_x + 20
-                    fish_y = panel_y + 70 + idx * 50
-                    fish_rect = pygame.Rect(fish_x, fish_y, 300, 40)  # area for each fish
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if selling_open:
+                    for idx, fish in enumerate(inventory.fishes):
+                        fish_x = panel_x + 20
+                        fish_y = panel_y + 70 + idx * 50
+                        fish_rect = pygame.Rect(fish_x, fish_y, 300, 40)  # area for each fish
 
-                    if fish_rect.collidepoint(pygame.mouse.get_pos()):
-                        # Sell this fish
-                        inventory.sell_fish(fish, price_per_fish=10)
-                        break
+                        if fish_rect.collidepoint(pygame.mouse.get_pos()):
+                            # Sell this fish
+                            inventory.sell_fish(fish, FISH_PRICES[fish])
+                            break
+                elif shopping_open:
+                    for idx, rod in enumerate(ROD_SHOP):
+                        rod_x = panel_x + 20
+                        rod_y = panel_y + 70 + idx * 50
+                        rod_rect = pygame.Rect(rod_x, rod_y, 300, 40)  # area for each fish
+
+                        if rod_rect.collidepoint(pygame.mouse.get_pos()):
+                            if rod not in inventory.rods:
+                                # Sell this fish
+                                inventory.buy_rod(rod, ROD_SHOP[rod])
+                            break
 
         if fishing_mode:
             fishing_game.update(dt)
@@ -166,22 +207,54 @@ def Main():
                         img_y = fish_start_y + idx * 50
                         screen.blit(img, (img_x, img_y))
 
-                    fish_text = font.render(f"{fish} - $10", True, (255, 255, 255))
+                    fish_text = font.render(f"{fish} - ${FISH_PRICES[fish]}", True, (255, 255, 255))
                     screen.blit(fish_text, (img_x + 50, img_y + 10))
 
                 # Instructions
                 info_text = font.render("Click a fish to sell it!", True, (255, 255, 0))
                 screen.blit(info_text, (panel_x + panel_width // 2 - info_text.get_width() // 2, panel_y + panel_height - 40))
 
+            if shopping_open:
+                # Shop Panel
+                panel_width = 800
+                panel_height = 600
+                panel_surface = pygame.Surface((panel_width, panel_height), pygame.SRCALPHA)
+                panel_surface.fill((50, 50, 50, 220))
+                panel_x = (screen.get_width() - panel_width) // 2
+                panel_y = (screen.get_height() - panel_height) // 2
+                screen.blit(panel_surface, (panel_x, panel_y))
+
+                # Title
+                sell_title = font.render("Buy a new fishing rod !", True, (255, 255, 255))
+                screen.blit(sell_title, (panel_x + 20, panel_y + 20))
+
+                # Money
+                money_text = font.render(f"Money: ${inventory.money}", True, (255, 255, 0))
+                screen.blit(money_text, (panel_x + panel_width - money_text.get_width() - 20, panel_y + 20))
+
+                fishing_rod_start_y = panel_y + 70
+                for idx, rod in enumerate(ROD_SHOP):
+                    img_x = panel_x + 20
+                    img_y = fishing_rod_start_y + idx * 50
+                    if rod in inventory.rods:
+                        rod_text = font.render(f"{rod} - OWNED", True, (100, 100, 100))
+                    else:
+                        if inventory.money >= ROD_SHOP[rod]:
+                            rod_text = font.render(f"{rod} - ${ROD_SHOP[rod]}", True, (100, 255, 100))
+                        else:
+                            rod_text = font.render(f"{rod} - ${ROD_SHOP[rod]}", True, (255, 100, 100))
+                    screen.blit(rod_text, (img_x + 50, img_y + 10))
+
+                # Instructions
+                info_text = font.render("Click a fishing rod to buy it!", True, (255, 255, 0))
+                screen.blit(info_text, (panel_x + panel_width // 2 - info_text.get_width() // 2, panel_y + panel_height - 40))
 
             if interaction:
                 message_surface = font.render(interaction["message"], True, (255, 255, 255))
-                screen.blit(
-                    message_surface,
-                    ((screen.get_width() // 2) - message_surface.get_width() // 2, screen.get_height() - 250)
-                )
+                screen.blit(message_surface, ((screen.get_width() - message_surface.get_width()) // 2, screen.get_height() - 200))
             else:
                 selling_open = False 
+                shopping_open = False
                     
 
         pygame.display.flip()

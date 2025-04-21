@@ -264,7 +264,7 @@ class TileMap:
         interaction_zones = []
 
         for obj in self.tmx_data.objects:
-            if obj.type in ["fishing", "npc"]:
+            if obj.type in ["fishing", "shop", "sell"]:
                 interaction = {
                     "rect": pygame.Rect(
                         int(obj.x * self.zoom), 
