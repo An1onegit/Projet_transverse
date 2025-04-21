@@ -18,6 +18,7 @@ FISH_TIERS = {
     "Legendary": ["Ancient Coelacanth", "Mythical Leviathan", "Rainbow Koi"]
 }
 
+
 # Splash particle class
 class SplashParticle:
     def __init__(self, x, y, dx, dy):
@@ -121,8 +122,6 @@ class FishingMiniGame:
         pygame.draw.rect(self.screen, (0, 0, 0), (self.min_x, fill_bar_y, self.max_x - self.min_x, 30), 2)
 
         self.screen.blit(self.font.render("Fishing...", True, (0, 0, 0)), (self.min_x, fill_bar_y + 40))
-        if self.success:
-            self.screen.blit(self.font.render("You caught a fish!", True, (0, 100, 0)), (self.min_x, fill_bar_y + 80))
 
         # Display the countdown timer
         timer_text = self.font.render(f"Time Left: {int(self.total_time)}s", True, (0,0,0))
@@ -131,9 +130,10 @@ class FishingMiniGame:
 
 # Main Fishing Game
 class FishingGame:
-    def __init__(self, screen, font, inventory, max_strength=1000):
+    def __init__(self, screen, font, inventory, fish_images, max_strength=1000):
         self.screen = screen
         self.font = font
+        self.fish_images = fish_images
         self.max_strength = max_strength
         self.width, self.height = screen.get_size()
         self.inventory = inventory
@@ -264,12 +264,10 @@ class FishingGame:
         else:
             rarity = "Legendary"
 
-        fish_name = random.choice(FISH_TIERS[rarity])
-        self.inventory.add_fish(fish_name)
-        print(f"🎣 You caught a {fish_name} ({rarity}) at {int(distance)}px!")
-        print(self.inventory.show_inventory())
+        self.fish_name = random.choice(FISH_TIERS[rarity])
+        self.inventory.add_fish(self.fish_name)
 
-        self.last_caught_fish_text = f"🎣 You caught a {fish_name} ({rarity})!\nPress SPACE to fish again!"
+        self.last_caught_fish_text = f"You caught a {self.fish_name} ({rarity})!\nPress SPACE to fish again!"
         self.waiting_for_restart = True
 
     def draw(self):
@@ -334,3 +332,4 @@ class FishingGame:
                 text_surface = self.font.render(line, True, (255, 255, 255))
                 text_rect = text_surface.get_rect(center=(self.width // 2, self.height // 2 + i * 50))
                 self.screen.blit(text_surface, text_rect)
+            self.screen.blit(self.fish_images[self.fish_name], (self.width // 2 - self.fish_images[self.fish_name].get_width() // 2, self.height // 2 + 150))
