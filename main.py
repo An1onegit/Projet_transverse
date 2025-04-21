@@ -5,6 +5,7 @@ from library.preMenu import start_menu
 from library.menu import MainMenu
 from library.shopping import ShopMenu
 from library.sell import SellMenu
+from library.inventory import Inventory
 
 def Main():
     # Pygame setup
@@ -22,11 +23,12 @@ def Main():
     
 
     player = Player(pos=(3500, 3500), groups=sprite_group, hitboxes=tile_map.hitboxes)
+    inventory = Inventory()
 
     # Fishing mini-game setup
     font = pygame.font.SysFont(None, 36)
     text = font.render("Interact (E)", True, (255,255,255))
-    fishing_game = FishingGame(screen, font)
+    fishing_game = FishingGame(screen, font, inventory)
     fishing_mode = False
 
     fps = 120
