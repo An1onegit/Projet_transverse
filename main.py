@@ -3,8 +3,6 @@ from library.utils import *
 from library.fishing import FishingGame
 from library.preMenu import start_menu
 from library.menu import MainMenu
-from library.shopping import ShopMenu
-from library.sell import SellMenu
 from library.inventory import Inventory
 
 def Main():
@@ -79,21 +77,20 @@ def Main():
                             if interaction["type"] == "npc":
                                 selling_open = not selling_open
                                 inventory_open = False
+                            elif interaction["type"] == "fishing":
+                                fishing_mode = True
+                                fishing_game.reset_game()
                 else:
                     player.anim = 5
             if event.type == pygame.MOUSEBUTTONDOWN and selling_open:
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                
                 for idx, fish in enumerate(inventory.fishes):
                     fish_x = panel_x + 20
                     fish_y = panel_y + 70 + idx * 50
                     fish_rect = pygame.Rect(fish_x, fish_y, 300, 40)  # area for each fish
 
-                    if fish_rect.collidepoint(mouse_x, mouse_y):
+                    if fish_rect.collidepoint(pygame.mouse.get_pos()):
                         # Sell this fish
-                        sold = inventory.sell_fish(fish, price_per_fish=10)
-                        if sold:
-                            print(f"Sold {fish} for $10!")
+                        inventory.sell_fish(fish, price_per_fish=10)
                         break
 
         if fishing_mode:
@@ -156,6 +153,10 @@ def Main():
                 sell_title = font.render("Sell your fish", True, (255, 255, 255))
                 screen.blit(sell_title, (panel_x + 20, panel_y + 20))
 
+                # Money
+                money_text = font.render(f"Money: ${inventory.money}", True, (255, 255, 0))
+                screen.blit(money_text, (panel_x + panel_width - money_text.get_width() - 20, panel_y + 20))
+
                 # Fishes for sale
                 fish_start_y = panel_y + 70
                 for idx, fish in enumerate(inventory.fishes):
@@ -179,12 +180,6 @@ def Main():
                     message_surface,
                     ((screen.get_width() // 2) - message_surface.get_width() // 2, screen.get_height() - 250)
                 )
-
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_e]:
-                    if interaction["type"] == "fishing":
-                        fishing_mode = True
-                        fishing_game.reset_game() 
             else:
                 selling_open = False 
                     
