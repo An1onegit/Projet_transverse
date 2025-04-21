@@ -173,7 +173,8 @@ class CameraGroup(pygame.sprite.Group):
         self.camera_rect = pygame.Rect(l,t,w,h)
 
     def box_target_camera(self, target):
-        """ Follow the player when it reaches the limit of the box. """
+        """ Follow the player, but stop moving camera if it would go out of the map. """
+
         if target.rect.left < self.camera_rect.left:
             self.camera_rect.left = target.rect.left
         if target.rect.right > self.camera_rect.right:
@@ -183,8 +184,14 @@ class CameraGroup(pygame.sprite.Group):
         if target.rect.bottom > self.camera_rect.bottom:
             self.camera_rect.bottom = target.rect.bottom
 
+        # Calculate raw offset
         self.offset.x = self.camera_rect.left - self.camera_borders['left']
         self.offset.y = self.camera_rect.top - self.camera_borders['top']
+
+        # CLAMP the camera offset to the map size
+        self.offset.x = max(0, min(self.offset.x, self.ground_rect.width - self.display_surface.get_width()))
+        self.offset.y = max(0, min(self.offset.y, self.ground_rect.height - self.display_surface.get_height()))
+
 
     def custom_draw(self, player):
         """ Draw the map with the '3D' objects. """
