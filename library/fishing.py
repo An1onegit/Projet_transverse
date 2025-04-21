@@ -249,7 +249,7 @@ class FishingGame:
             print("No inventory linked!")
             return
 
-        distance = self.projectile_position[0] - self.launch_x
+        distance = self.projectile_position[0] - self.water_start_x
         if distance < 0:
             distance = 0
 
@@ -310,7 +310,7 @@ class FishingGame:
 
         if self.projectile_position:
             pygame.draw.circle(self.screen, (255, 50, 50), (int(self.projectile_position[0]) - offset, int(self.projectile_position[1])), 6)
-            distance = max(0, int(self.projectile_position[0] - self.launch_x))
+            distance = max(0, int(self.projectile_position[0] - self.water_start_x))
             distance_text = self.font.render(f"Distance: {distance}px", True, (0, 0, 0))
             self.screen.blit(distance_text, (self.width - distance_text.get_width() - 250, 140))
 

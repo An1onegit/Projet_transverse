@@ -21,5 +21,3 @@ class Inventory:
             return True
         return False
     
-    def show_inventory(self):
-        return self.fishes
