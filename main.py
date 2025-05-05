@@ -1,14 +1,21 @@
+import ctypes
 import pygame
 from library.utils import *
 from library.fishing import FishingGame
 from library.preMenu import start_menu
-from library.menu import MainMenu
+from library.menu import Menu
 from library.inventory import Inventory
 
 def Main():
+    user32 = ctypes.windll.user32
+    user32.SetProcessDPIAware()
+
+    screen_width = user32.GetSystemMetrics(0)
+    screen_height = user32.GetSystemMetrics(1)
+
     # Pygame setup
     pygame.init()
-    screen = pygame.display.set_mode((1920, 1080))
+    screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
     pygame.display.set_caption("Bear's Fishing Empire")
 
     # Load map and scale it
@@ -76,6 +83,8 @@ def Main():
 
     fps = 120
     clock = pygame.time.Clock()
+    info = pygame.display.Info()
+    print(f"Current display size: {info.current_w}x{info.current_h}")
 
     running = True
     while running:
@@ -262,5 +271,4 @@ def Main():
     pygame.quit()
 
 if __name__ == "__main__":
-    #start_menu(lambda: MainMenu(Main))
-    Main()
+    Menu(Main)
