@@ -2,7 +2,6 @@ import ctypes
 import pygame
 from library.utils import *
 from library.fishing import FishingGame
-from library.preMenu import start_menu
 from library.menu import Menu
 from library.inventory import Inventory
 
@@ -26,11 +25,11 @@ def Main():
     tile_map.render_objects(sprite_group)
     interaction_zones = tile_map.load_interaction_zones()
     
-    player = Player(pos=(4500, 4500), groups=sprite_group, hitboxes=tile_map.hitboxes)
+    player = Player(pos=(4500 * 1.8, 4500 * 1.8), groups=sprite_group, hitboxes=tile_map.hitboxes)
     inventory = Inventory()
 
     # Fishing mini-game setup
-    font = pygame.font.SysFont(None, 36)
+    font = pygame.font.SysFont(None, 60)
     FISH_IMAGES = {
         "Small Carp": pygame.image.load("sources/img/fishes/tile000.png").convert_alpha(),
         "Tiny Bass": pygame.image.load("sources/img/fishes/tile001.png").convert_alpha(),

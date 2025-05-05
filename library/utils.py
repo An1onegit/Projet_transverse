@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
     """
     def __init__(self, pos : tuple, groups : pygame.sprite.Group, hitboxes : list):
         super().__init__(groups)
-        scale_factor = 4
+        scale_factor = 8
 
         self.right = [
             pygame.transform.scale(
@@ -66,7 +66,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
         self.position = pygame.math.Vector2(pos)
         self.direction = pygame.math.Vector2()
-        self.speed = 200
+        self.speed = 200 * 1.8
         self.anim = 5
         self.hitboxes = hitboxes
 
@@ -165,7 +165,7 @@ class CameraGroup(pygame.sprite.Group):
         self.ground_rect = self.ground_surf.get_rect(topleft = (0,0))
 
         # Box setup
-        self.camera_borders = {'left': 800, 'right': 800, 'top': 400, 'bottom': 400}
+        self.camera_borders = {'left': 1000, 'right': 1000, 'top': 400, 'bottom': 400}
         l = self.camera_borders['left']
         t = self.camera_borders['top']
         w = self.display_surface.get_size()[0] - (self.camera_borders['left'] + self.camera_borders['right'])
@@ -206,6 +206,21 @@ class CameraGroup(pygame.sprite.Group):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
 
+            # # DEBUG: Draw camera box rectangle
+            # debug_rect_color = (255, 0, 0)  # Red
+            # debug_rect_thickness = 2
+
+            # # Compute screen-space position of the camera_rect (relative to offset)
+            # screen_camera_rect = pygame.Rect(
+            #     self.camera_rect.left - self.offset.x,
+            #     self.camera_rect.top - self.offset.y,
+            #     self.camera_rect.width,
+            #     self.camera_rect.height
+            # )
+
+            # pygame.draw.rect(self.display_surface, debug_rect_color, screen_camera_rect, debug_rect_thickness)
+
+
 class TileMap:
     """ Render the map, objects and hitboxes. """
     def __init__(self, map_file : str):
@@ -218,7 +233,7 @@ class TileMap:
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.render_to_surface()
 
-        self.zoom = 2.5
+        self.zoom = 2.5 * 1.8
 
         self.hitboxes = []
         self.load_hitboxes()
