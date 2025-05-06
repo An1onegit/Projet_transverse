@@ -165,7 +165,8 @@ class CameraGroup(pygame.sprite.Group):
         self.ground_rect = self.ground_surf.get_rect(topleft = (0,0))
 
         # Box setup
-        self.camera_borders = {'left': 1000, 'right': 1000, 'top': 400, 'bottom': 400}
+        self.camera_borders = {'left': self.display_surface.get_width() - 3/4*self.display_surface.get_width(), 'right': self.display_surface.get_width() - 3/4*self.display_surface.get_width(), 'top': self.display_surface.get_height() - 3/4*self.display_surface.get_height(), 'bottom': self.display_surface.get_height() - 3/4*self.display_surface.get_height()}
+        print(self.camera_borders)
         l = self.camera_borders['left']
         t = self.camera_borders['top']
         w = self.display_surface.get_size()[0] - (self.camera_borders['left'] + self.camera_borders['right'])
@@ -206,19 +207,19 @@ class CameraGroup(pygame.sprite.Group):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
 
-            # # DEBUG: Draw camera box rectangle
-            # debug_rect_color = (255, 0, 0)  # Red
-            # debug_rect_thickness = 2
+            # DEBUG: Draw camera box rectangle
+            debug_rect_color = (255, 0, 0)  # Red
+            debug_rect_thickness = 2
 
-            # # Compute screen-space position of the camera_rect (relative to offset)
-            # screen_camera_rect = pygame.Rect(
-            #     self.camera_rect.left - self.offset.x,
-            #     self.camera_rect.top - self.offset.y,
-            #     self.camera_rect.width,
-            #     self.camera_rect.height
-            # )
+            # Compute screen-space position of the camera_rect (relative to offset)
+            screen_camera_rect = pygame.Rect(
+                self.camera_rect.left - self.offset.x,
+                self.camera_rect.top - self.offset.y,
+                self.camera_rect.width,
+                self.camera_rect.height
+            )
 
-            # pygame.draw.rect(self.display_surface, debug_rect_color, screen_camera_rect, debug_rect_thickness)
+            pygame.draw.rect(self.display_surface, debug_rect_color, screen_camera_rect, debug_rect_thickness)
 
 class TileMap:
     """ Render the map, objects and hitboxes. """
