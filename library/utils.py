@@ -10,10 +10,10 @@ class Tile(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     """
-        This class represent the player. 
-        It defines all the animations of the player's movements and record the inputs to handle movements.
+    This class represents the player.
+    It defines all the animations of the player's movements and handles movement input and collisions.
     """
-    def __init__(self, pos : tuple, groups : pygame.sprite.Group, hitboxes : list):
+    def __init__(self, pos: tuple, groups: pygame.sprite.Group, hitboxes: list):
         super().__init__(groups)
         scale_factor = 8
 
@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
             pygame.transform.scale(
                 pygame.image.load(f"sources/img/animations/right{i}.png").convert_alpha(),
                 (int(pygame.image.load(f"sources/img/animations/right{i}.png").get_width() * scale_factor),
-                int(pygame.image.load(f"sources/img/animations/right{i}.png").get_height() * scale_factor))
+                 int(pygame.image.load(f"sources/img/animations/right{i}.png").get_height() * scale_factor))
             )
             for i in range(1, 7)
         ]
@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
             pygame.transform.scale(
                 pygame.image.load(f"sources/img/animations/left{i}.png").convert_alpha(),
                 (int(pygame.image.load(f"sources/img/animations/left{i}.png").get_width() * scale_factor),
-                int(pygame.image.load(f"sources/img/animations/left{i}.png").get_height() * scale_factor))
+                 int(pygame.image.load(f"sources/img/animations/left{i}.png").get_height() * scale_factor))
             )
             for i in range(1, 7)
         ]
@@ -39,7 +39,7 @@ class Player(pygame.sprite.Sprite):
             pygame.transform.scale(
                 pygame.image.load(f"sources/img/animations/up{i}.png").convert_alpha(),
                 (int(pygame.image.load(f"sources/img/animations/up{i}.png").get_width() * scale_factor),
-                int(pygame.image.load(f"sources/img/animations/up{i}.png").get_height() * scale_factor))
+                 int(pygame.image.load(f"sources/img/animations/up{i}.png").get_height() * scale_factor))
             )
             for i in range(1, 7)
         ]
@@ -48,7 +48,7 @@ class Player(pygame.sprite.Sprite):
             pygame.transform.scale(
                 pygame.image.load(f"sources/img/animations/down{i}.png").convert_alpha(),
                 (int(pygame.image.load(f"sources/img/animations/down{i}.png").get_width() * scale_factor),
-                int(pygame.image.load(f"sources/img/animations/down{i}.png").get_height() * scale_factor))
+                 int(pygame.image.load(f"sources/img/animations/down{i}.png").get_height() * scale_factor))
             )
             for i in range(1, 7)
         ]
@@ -57,15 +57,25 @@ class Player(pygame.sprite.Sprite):
             pygame.transform.scale(
                 pygame.image.load(f"sources/img/animations/idle{i}.png").convert_alpha(),
                 (int(pygame.image.load(f"sources/img/animations/idle{i}.png").get_width() * scale_factor),
-                int(pygame.image.load(f"sources/img/animations/idle{i}.png").get_height() * scale_factor))
+                 int(pygame.image.load(f"sources/img/animations/idle{i}.png").get_height() * scale_factor))
             )
-            for i in range(1,3)
+            for i in range(1, 3)
         ]
 
         self.counter = 0
         self.image = self.idle[self.counter]
-        self.rect = self.image.get_rect(center=pos)
-        self.position = pygame.math.Vector2(pos)
+        self.rect = self.image.get_rect(topleft=pos)
+
+        # Define the hitbox as the bottom half of the sprite
+        hitbox_height = self.rect.height // 2
+        self.hitbox = pygame.Rect(
+            self.rect.left,
+            self.rect.top + hitbox_height,
+            self.rect.width,
+            hitbox_height
+        )
+
+        self.position = pygame.math.Vector2(self.hitbox.center)
         self.direction = pygame.math.Vector2()
         self.speed = 200 * 1.8
         self.anim = 5
@@ -73,9 +83,9 @@ class Player(pygame.sprite.Sprite):
         self.sound_manager = SoundManager()
         self.walking_last_frame = False
 
-    def movement_anim(self, direction : int):
-        """ Animate the character in function of his movement direction """
-        match (direction):
+    def movement_anim(self, direction: int):
+        """ Animate the character based on movement direction """
+        match direction:
             case 0:
                 self.counter += .08
                 if self.counter >= len(self.right):
@@ -103,24 +113,22 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.idle[int(self.counter)]
 
     def input(self):
-        """ Record the keyboard input to move the player. """
+        """ Record keyboard input to move the player. """
         keys = pygame.key.get_pressed()
         moving = keys[pygame.K_z] or keys[pygame.K_q] or keys[pygame.K_s] or keys[pygame.K_d] or keys[pygame.K_RIGHT] or keys[pygame.K_LEFT] or keys[pygame.K_DOWN] or keys[pygame.K_UP]
         self.direction.x = 0
         self.direction.y = 0
 
-        # Handle key inputs
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.direction.x = 1
             self.anim = 0
         elif keys[pygame.K_q] or keys[pygame.K_LEFT]:
             self.direction.x = -1
             self.anim = 1
-        
+
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             self.direction.y = 1
             self.anim = 2
-
         elif keys[pygame.K_z] or keys[pygame.K_UP]:
             self.direction.y = -1
             self.anim = 3
@@ -136,29 +144,27 @@ class Player(pygame.sprite.Sprite):
 
     def check_interactions(self, interaction_zones):
         for zone in interaction_zones:
-            if self.rect.colliderect(zone["rect"]):
-                return zone  # Return the zone we're interacting with
+            if self.hitbox.colliderect(zone["rect"]):
+                return zone
         return None
 
-
     def update(self, dt):
-        """ Handle the inputs, the collisions and the animations. """
+        """ Handle inputs, collisions, and animations. """
         self.input()
 
-        # Normalize diagonal movements
         if self.direction.length() > 0:
             self.direction = self.direction.normalize()
 
-        # Prediction of the next position of the player 
         new_position = self.position + (self.direction * self.speed * dt)
-        new_rect = self.rect.copy()
-        new_rect.center = new_position
+        new_hitbox = self.hitbox.copy()
+        new_hitbox.center = new_position
 
-        # Check collision with a hitbox
-        if not any(new_rect.colliderect(hitbox) for hitbox in self.hitboxes):
+        if not any(new_hitbox.colliderect(hitbox) for hitbox in self.hitboxes):
             self.position = new_position
-        
-        self.rect.center = self.position
+
+        self.hitbox.center = self.position
+        self.rect.midbottom = self.hitbox.midbottom  # Align sprite to hitbox visually
+
         self.movement_anim(self.anim)
 
 class CameraGroup(pygame.sprite.Group):

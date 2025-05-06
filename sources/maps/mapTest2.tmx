@@ -903,12 +903,12 @@
   <object id="61" x="2181.67" y="1157.67" width="25.3333" height="30"/>
   <object id="30" x="1143.67" y="1281" width="168.667" height="30"/>
   <object id="62" x="1281.67" y="1249" width="28.6667" height="24.5"/>
-  <object id="66" x="1441.67" y="1319" width="48.6667" height="86"/>
+  <object id="66" x="1441" y="1320.33" width="48.6667" height="86"/>
   <object id="67" x="1471.67" y="1385" width="48.6667" height="86"/>
   <object id="68" x="1503.67" y="1477" width="48.6667" height="90"/>
   <object id="69" x="1537.67" y="1541" width="48.6667" height="90"/>
   <object id="63" x="1293.67" y="1411" width="48.6667" height="98"/>
-  <object id="64" x="1325.67" y="1481" width="48.6667" height="98"/>
+  <object id="64" x="1325.67" y="1479.67" width="48.6667" height="98"/>
   <object id="65" x="1357.67" y="1579" width="48.6667" height="50"/>
   <object id="28" x="683.485" y="240.697" width="8.21212" height="7"/>
   <object id="31" x="313" y="1314.33" width="238" height="30"/>
@@ -918,7 +918,7 @@
   <object id="36" x="25.9998" y="1186.33" width="67.0003" height="30"/>
   <object id="37" x="-0.000166667" y="1121.33" width="29.0003" height="65"/>
   <object id="32" x="539.667" y="1277" width="168.667" height="30"/>
-  <object id="74" x="1282.17" y="1307.5" width="48.6667" height="98"/>
+  <object id="74" x="1264.17" y="1312.83" width="48.6667" height="98"/>
   <object id="86" x="-20" y="0" width="20" height="1952"/>
   <object id="87" x="2207.5" y="-0.5" width="20" height="1952"/>
   <object id="88" x="-2" y="1952" width="2210.06" height="3.375"/>
@@ -941,7 +941,7 @@
     <property name="message" value="Press E to fish"/>
    </properties>
   </object>
-  <object id="85" name="Shopping spot" type="shop" x="1831" y="1599" width="56" height="31">
+  <object id="85" name="Shopping spot" type="shop" x="1828.33" y="1596.33" width="56" height="31">
    <properties>
     <property name="message" value="Press E to buy new rods"/>
    </properties>
