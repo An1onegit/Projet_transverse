@@ -30,18 +30,24 @@ def Menu(mainGame):
     accueil_img = pygame.image.load("sources/img/proto_2_menu_projet_transverse.png").convert()
     accueil_img = pygame.transform.scale(accueil_img, (screen_width, screen_height))
 
+    menu_bg = pygame.image.load("sources/img/menu projet transverse.png").convert_alpha()
+    menu_bg = pygame.transform.scale(menu_bg, (screen_width, screen_height))
+
     play_img = pygame.image.load("sources/img/bouton_PLAY.png").convert_alpha()
-    quit_img = pygame.image.load("sources/img/bouton_QUIT.png").convert_alpha()
     settings_img = pygame.image.load("sources/img/bouton_SETTINGS.png").convert_alpha()
-    tutorial_img = pygame.image.load("sources/img/bouton_TUTORIAL.png").convert_alpha()
+    settings_img = pygame.transform.scale(settings_img, (play_img.get_width(), play_img.get_height()))
+
+    quit_img = pygame.image.load("sources/img/bouton_QUIT.png").convert_alpha()
+    quit_img = pygame.transform.scale(quit_img, (play_img.get_width(), play_img.get_height()))
+    #tutorial_img = pygame.image.load("sources/img/bouton_TUTORIAL.png").convert_alpha()
 
     # --- BUTTON INSTANCE ---
     # positioning of the buttons
-    button_x = screen_width // 2 - play_img.get_width() // 2
-    play_button = Button(button_x, 350, play_img, 1)
-    quit_button = Button(button_x, 450, quit_img, 1)
-    settings_button = Button(button_x, 550, settings_img, 1)
-    tutorial_button = Button(button_x, 650, tutorial_img, 1)
+    button_x = screen_width // 2 - play_img.get_width()
+    play_button = Button(button_x, screen_height - (5/10) * screen_height, play_img, 2)
+    settings_button = Button(button_x, screen_height - (4/10) * screen_height, settings_img, 2)
+    quit_button = Button(button_x, screen_height - (3/10) * screen_height, quit_img, 2)
+    #tutorial_button = Button(button_x, screen_height - 2/10*screen_height, tutorial_img, 2)
 
     current_state = STATE_TITLE_SCREEN
 
@@ -60,6 +66,8 @@ def Menu(mainGame):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         mainGame()
+                    if event.key == pygame.K_ESCAPE:
+                        run = False
 
         screen.fill((177, 235, 52))
 
@@ -67,6 +75,7 @@ def Menu(mainGame):
             screen.blit(accueil_img, (0, 0))
 
         elif current_state == STATE_MAIN_MENU:
+            screen.blit(menu_bg, (0, 0))    
 
             if play_button.draw(screen):
                 mainGame()
@@ -78,9 +87,9 @@ def Menu(mainGame):
                 print("Action: Options !") 
                 # current_state = STATE_SETTINGS 
 
-            if tutorial_button.draw(screen):
-                print("Action: Tutoriel !") 
-                # current_state = STATE_TUTORIAL # Pour plus tard
+            # if tutorial_button.draw(screen):
+            #     print("Action: Tutoriel !") 
+            #     # current_state = STATE_TUTORIAL # Pour plus tard
 
         pygame.display.update()
 
