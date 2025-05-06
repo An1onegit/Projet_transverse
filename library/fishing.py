@@ -114,17 +114,17 @@ class FishingMiniGame:
         y_pos = int(self.height * 0.2)
         fill_bar_y = int(self.height * 0.3)
 
-        pygame.draw.rect(self.screen, (30, 30, 30), (self.fish_x, y_pos, self.bar_width, self.bar_height))
-        pygame.draw.rect(self.screen, (200, 200, 0), (self.cursor_x, y_pos, self.cursor_width, self.bar_height))
+        pygame.draw.rect(self.screen, (200, 200, 200), (self.fish_x, y_pos, self.bar_width, self.bar_height))
+        pygame.draw.rect(self.screen, (200, 0, 0), (self.cursor_x, y_pos, self.cursor_width, self.bar_height))
 
         fill_width = int((self.max_x - self.min_x) * self.bar_fill)
         pygame.draw.rect(self.screen, (100, 255, 100), (self.min_x, fill_bar_y, fill_width, 30))
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.min_x, fill_bar_y, self.max_x - self.min_x, 30), 2)
+        pygame.draw.rect(self.screen, (255, 255, 255), (self.min_x, fill_bar_y, self.max_x - self.min_x, 30), 2)
 
-        self.screen.blit(self.font.render("Fishing...", True, (0, 0, 0)), (self.min_x, fill_bar_y + 40))
+        self.screen.blit(self.font.render("Fishing...", True, (255, 255, 255)), (self.min_x, fill_bar_y + 40))
 
         # Display the countdown timer
-        timer_text = self.font.render(f"Time Left: {int(self.total_time)}s", True, (0,0,0))
+        timer_text = self.font.render(f"Time Left: {int(self.total_time)}s", True, (255,255,255))
         self.screen.blit(timer_text, (self.width // 2 - timer_text.get_width() // 2, fill_bar_y + 40))
 
 
@@ -379,8 +379,8 @@ class FishingGame:
             end_y = self.launch_y - math.sin(angle_rad) * line_len
             pygame.draw.line(self.screen, (0, 0, 0), (self.launch_x - offset, self.launch_y), (end_x, end_y), 3)
             angle_val_text = f"Angle: {int(current_angle)}°"
-            angle_surf = self.font.render(angle_val_text, True, (255, 255, 255), (0,0,0))
-            self.screen.blit(angle_surf, (self.launch_x - offset - 50, self.launch_y - 60))
+            angle_surf = self.font.render(angle_val_text, True, (255, 255, 255))
+            self.screen.blit(angle_surf, (self.launch_x - offset - 300, self.launch_y - 60))
 
 
         # --- Draw Projectile (relative to offset) ---
@@ -389,7 +389,7 @@ class FishingGame:
              proj_y = int(self.projectile_position[1])
              pygame.draw.circle(self.screen, (255, 50, 50), (proj_x, proj_y), 6)
              distance = max(0, int(self.projectile_position[0] - self.water_start_x))
-             distance_text_surf = self.font.render(f"Distance: {distance}px", True, (255, 255, 255), (0,0,0))
+             distance_text_surf = self.font.render(f"Distance: {distance}px", True, (255, 255, 255))
              self.screen.blit(distance_text_surf, (self.width - distance_text_surf.get_width() - 20, 20))
 
 
