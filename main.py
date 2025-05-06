@@ -107,6 +107,8 @@ def Main():
                     if event.key == pygame.K_DELETE:
                         running = False
                         Menu(Main)
+                    if event.key == pygame.K_m:
+                        running = False
                     if event.key == pygame.K_i:
                         inventory_open = not inventory_open
                     if event.key == pygame.K_e:

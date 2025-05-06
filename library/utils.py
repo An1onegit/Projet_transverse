@@ -207,19 +207,19 @@ class CameraGroup(pygame.sprite.Group):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
 
-            # DEBUG: Draw camera box rectangle
-            debug_rect_color = (255, 0, 0)  # Red
-            debug_rect_thickness = 2
+            # # DEBUG: Draw camera box rectangle
+            # debug_rect_color = (255, 0, 0)  # Red
+            # debug_rect_thickness = 2
 
-            # Compute screen-space position of the camera_rect (relative to offset)
-            screen_camera_rect = pygame.Rect(
-                self.camera_rect.left - self.offset.x,
-                self.camera_rect.top - self.offset.y,
-                self.camera_rect.width,
-                self.camera_rect.height
-            )
+            # # Compute screen-space position of the camera_rect (relative to offset)
+            # screen_camera_rect = pygame.Rect(
+            #     self.camera_rect.left - self.offset.x,
+            #     self.camera_rect.top - self.offset.y,
+            #     self.camera_rect.width,
+            #     self.camera_rect.height
+            # )
 
-            pygame.draw.rect(self.display_surface, debug_rect_color, screen_camera_rect, debug_rect_thickness)
+            # pygame.draw.rect(self.display_surface, debug_rect_color, screen_camera_rect, debug_rect_thickness)
 
 class TileMap:
     """ Render the map, objects and hitboxes. """
@@ -238,8 +238,7 @@ class TileMap:
         xratio = self.display_surface.get_width() / 1920
         yration = self.display_surface.get_height() / 1080
 
-        self.zoom = 2.5 * (xratio + yration)/2
-        print(self.zoom)
+        self.zoom = 3.75
 
         self.hitboxes = []
         self.load_hitboxes()
