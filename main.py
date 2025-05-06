@@ -17,7 +17,7 @@ def Main():
         screen_width, screen_height = info.current_w, info.current_h
 
     # Pygame setup
-    screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((screen_width, screen_height))
     
     pygame.display.set_caption("Bear's Fishing Empire")
 
@@ -31,6 +31,7 @@ def Main():
     
     player = Player(pos=(4500, 4500), groups=sprite_group, hitboxes=tile_map.hitboxes)
     inventory = Inventory()
+    sound_manager = SoundManager()
 
     # Fishing mini-game setup
     font = pygame.font.SysFont(None, 60)
@@ -136,6 +137,7 @@ def Main():
                         if fish_rect.collidepoint(pygame.mouse.get_pos()):
                             # Sell this fish
                             inventory.sell_fish(fish, FISH_PRICES[fish])
+                            sound_manager.play_sfx("money")
                             break
                 elif shopping_open:
                     for idx, rod in enumerate(ROD_SHOP):

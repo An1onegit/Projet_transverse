@@ -1,4 +1,5 @@
 import pygame
+import random
 from pytmx.util_pygame import load_pygame
 
 class Tile(pygame.sprite.Sprite):
@@ -69,6 +70,8 @@ class Player(pygame.sprite.Sprite):
         self.speed = 200 * 1.8
         self.anim = 5
         self.hitboxes = hitboxes
+        self.sound_manager = SoundManager()
+        self.walking_last_frame = False
 
     def movement_anim(self, direction : int):
         """ Animate the character in function of his movement direction """
@@ -102,6 +105,7 @@ class Player(pygame.sprite.Sprite):
     def input(self):
         """ Record the keyboard input to move the player. """
         keys = pygame.key.get_pressed()
+        moving = keys[pygame.K_z] or keys[pygame.K_q] or keys[pygame.K_s] or keys[pygame.K_d] or keys[pygame.K_RIGHT] or keys[pygame.K_LEFT] or keys[pygame.K_DOWN] or keys[pygame.K_UP]
         self.direction.x = 0
         self.direction.y = 0
 
@@ -113,7 +117,6 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = -1
             self.anim = 1
         
-
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             self.direction.y = 1
             self.anim = 2
@@ -121,6 +124,15 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_z] or keys[pygame.K_UP]:
             self.direction.y = -1
             self.anim = 3
+
+        if moving:
+            if not self.walking_last_frame:
+                self.sound_manager.start_walk()
+                self.walking_last_frame = True
+        else:
+            if self.walking_last_frame:
+                self.sound_manager.stop_walk()
+                self.walking_last_frame = False
 
     def check_interactions(self, interaction_zones):
         for zone in interaction_zones:
@@ -324,7 +336,72 @@ class Button():
 		surface.blit(self.image, (self.rect.x, self.rect.y))
 
 		return action
-    
+
+class SoundManager:
+    def __init__(self):
+        if not pygame.mixer.get_init():
+            pygame.mixer.init()
+
+        # Background music
+        self.music_tracks = {
+            "forest": "assets/sounds/ambient_forest.mp3",
+        }
+
+        # Sound Effects (multiple variants per action)
+        self.sfx = {
+            "walk": [
+                pygame.mixer.Sound("sources/sounds/Walk1.wav"),
+                pygame.mixer.Sound("sources/sounds/Walk2.wav")
+            ],
+            "splash": [
+                pygame.mixer.Sound("sources/sounds/Splash1.wav"),
+                pygame.mixer.Sound("sources/sounds/Splash2.wav"),
+                pygame.mixer.Sound("sources/sounds/Splash3.wav")
+            ],
+            "money": [pygame.mixer.Sound("sources/sounds/Money.wav")],
+        }
+
+        # Set volumes
+        for sound_list in self.sfx.values():
+            for sound in sound_list:
+                sound.set_volume(0.5)
+
+        self.walking_channel = None  # Separate channel for walking loop
+        self.walking = False
+
+    def play_music(self, name, loop=True, volume=0.5):
+        if name in self.music_tracks:
+            pygame.mixer.music.load(self.music_tracks[name])
+            pygame.mixer.music.set_volume(volume)
+            pygame.mixer.music.play(-1 if loop else 0)
+
+    def stop_music(self):
+        pygame.mixer.music.stop()
+
+    def pause_music(self):
+        pygame.mixer.music.pause()
+
+    def unpause_music(self):
+        pygame.mixer.music.unpause()
+
+    def play_sfx(self, name):
+        """Play a random sound from the given category."""
+        if name in self.sfx:
+            sound = random.choice(self.sfx[name])
+            sound.play()
+
+    def start_walk(self):
+        if not self.walking:
+            sound = self.sfx["walk"][random.randint(0,1)]
+            self.walking_channel = sound.play(loops=-1)
+            self.walking = True
+
+    def stop_walk(self):
+        if self.walking and self.walking_channel:
+            self.walking_channel.stop()
+            self.walking = False
+
+
 def draw_text(text, font, text_col, x, y, screen, center=False):
     img = font.render(text, True, text_col)
     if center:

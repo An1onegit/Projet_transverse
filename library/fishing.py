@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+from library.utils import SoundManager
 
 # Constants
 GRAVITY = 9.81 * 50
@@ -127,7 +128,6 @@ class FishingMiniGame:
         timer_text = self.font.render(f"Time Left: {int(self.total_time)}s", True, (255,255,255))
         self.screen.blit(timer_text, (self.width // 2 - timer_text.get_width() // 2, fill_bar_y + 40))
 
-
 # Main Fishing Game
 class FishingGame:
     def __init__(self, screen, font, inventory, fish_images, max_strength=1000):
@@ -175,6 +175,7 @@ class FishingGame:
         # <<< CHANGE END 2 >>>
 
         self.reset() # Call reset after loading/scaling the background
+        self.sound_manager = SoundManager()
 
 
     def reset(self):
@@ -398,8 +399,8 @@ class FishingGame:
             splash_x = int(splash.x - offset)
             splash_y = int(splash.y)
             if splash.life > 0:
-                 pygame.draw.circle(self.screen, (255, 255, 255), (splash_x, splash_y), 2)
-
+                pygame.draw.circle(self.screen, (255, 255, 255), (splash_x, splash_y), 2)
+                self.sound_manager.play_sfx("splash")
 
         # --- Draw Fishing Minigame UI (Not relative to offset - fixed position) ---
         self.fishing_game.draw()
