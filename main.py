@@ -29,7 +29,7 @@ def Main():
     tile_map.render_objects(sprite_group)
     interaction_zones = tile_map.load_interaction_zones()
     
-    player = Player(pos=(4500 * 1.8, 4500 * 1.8), groups=sprite_group, hitboxes=tile_map.hitboxes)
+    player = Player(pos=(4500, 4500), groups=sprite_group, hitboxes=tile_map.hitboxes)
     inventory = Inventory()
 
     # Fishing mini-game setup

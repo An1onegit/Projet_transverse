@@ -233,7 +233,12 @@ class TileMap:
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.render_to_surface()
 
-        self.zoom = 2.5 * 1.8
+        self.display_surface = pygame.display.get_surface()
+
+        xratio = self.display_surface.get_width() / 1920
+        yration = self.display_surface.get_height() / 1080
+
+        self.zoom = 2.5 * (xratio + yration)/2
 
         self.hitboxes = []
         self.load_hitboxes()
