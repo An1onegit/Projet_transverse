@@ -74,22 +74,22 @@ class Player(pygame.sprite.Sprite):
         """ Animate the character in function of his movement direction """
         match (direction):
             case 0:
-                self.counter += .10
+                self.counter += .08
                 if self.counter >= len(self.right):
                     self.counter = 0
                 self.image = self.right[int(self.counter)]
             case 1:
-                self.counter += .10
+                self.counter += .08
                 if self.counter >= len(self.left):
                     self.counter = 0
                 self.image = self.left[int(self.counter)]
             case 2:
-                self.counter += .10
+                self.counter += .08
                 if self.counter >= len(self.down):
                     self.counter = 0
                 self.image = self.down[int(self.counter)]
             case 3:
-                self.counter += .10
+                self.counter += .08
                 if self.counter >= len(self.up):
                     self.counter = 0
                 self.image = self.up[int(self.counter)]
