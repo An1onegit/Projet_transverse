@@ -1,13 +1,16 @@
-import ctypes
+import platform
 import pygame
 from library.utils import *
 
 def Menu(mainGame):
-    user32 = ctypes.windll.user32
-    user32.SetProcessDPIAware()
-
-    screen_width = user32.GetSystemMetrics(0)
-    screen_height = user32.GetSystemMetrics(1)
+    if platform.system() == "Windows":
+        import ctypes
+        ctypes.windll.user32.SetProcessDPIAware()
+        screen_width = ctypes.windll.user32.GetSystemMetrics(0)
+        screen_height = ctypes.windll.user32.GetSystemMetrics(1)
+    else:
+        info = pygame.display.Info()
+        screen_width, screen_height = info.current_w, info.current_h
 
     pygame.init()
 
