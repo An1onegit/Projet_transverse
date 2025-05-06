@@ -344,7 +344,7 @@ class SoundManager:
 
         # Background music
         self.music_tracks = {
-            "forest": "assets/sounds/ambient_forest.mp3",
+            "forest": "sources/sounds/ambient.mp3",
         }
 
         # Sound Effects (multiple variants per action)
@@ -364,7 +364,7 @@ class SoundManager:
         # Set volumes
         for sound_list in self.sfx.values():
             for sound in sound_list:
-                sound.set_volume(0.5)
+                sound.set_volume(0.8)
 
         self.walking_channel = None  # Separate channel for walking loop
         self.walking = False

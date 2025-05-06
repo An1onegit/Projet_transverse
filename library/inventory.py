@@ -1,6 +1,6 @@
 ROD_STATS = {
-        "Basic Rod": 500,
-        "Advanced Rod": 800,
+        "Basic Rod": 600,
+        "Advanced Rod": 900,
         "Super Rod": 1200,
         "Legendary Rod": 1500
     }

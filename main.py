@@ -88,8 +88,8 @@ def Main():
 
     fps = 120
     clock = pygame.time.Clock()
-    info = pygame.display.Info()
-    print(f"Current display size: {info.current_w}x{info.current_h}")
+
+    sound_manager.play_music("forest")
 
     running = True
     while running:
