@@ -22,7 +22,7 @@ class Player(pygame.sprite.Sprite):
                 (int(pygame.image.load(f"sources/img/animations/right{i}.png").get_width() * scale_factor),
                 int(pygame.image.load(f"sources/img/animations/right{i}.png").get_height() * scale_factor))
             )
-            for i in range(1, 5)
+            for i in range(1, 7)
         ]
 
         self.left = [
@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
                 (int(pygame.image.load(f"sources/img/animations/left{i}.png").get_width() * scale_factor),
                 int(pygame.image.load(f"sources/img/animations/left{i}.png").get_height() * scale_factor))
             )
-            for i in range(1, 5)
+            for i in range(1, 7)
         ]
 
         self.up = [
@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
                 (int(pygame.image.load(f"sources/img/animations/up{i}.png").get_width() * scale_factor),
                 int(pygame.image.load(f"sources/img/animations/up{i}.png").get_height() * scale_factor))
             )
-            for i in range(1, 8)
+            for i in range(1, 7)
         ]
 
         self.down = [
@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
                 (int(pygame.image.load(f"sources/img/animations/down{i}.png").get_width() * scale_factor),
                 int(pygame.image.load(f"sources/img/animations/down{i}.png").get_height() * scale_factor))
             )
-            for i in range(1, 8)
+            for i in range(1, 7)
         ]
 
         self.idle = [
@@ -74,22 +74,22 @@ class Player(pygame.sprite.Sprite):
         """ Animate the character in function of his movement direction """
         match (direction):
             case 0:
-                self.counter += .15
+                self.counter += .10
                 if self.counter >= len(self.right):
                     self.counter = 0
                 self.image = self.right[int(self.counter)]
             case 1:
-                self.counter += .15
+                self.counter += .10
                 if self.counter >= len(self.left):
                     self.counter = 0
                 self.image = self.left[int(self.counter)]
             case 2:
-                self.counter += .15
+                self.counter += .10
                 if self.counter >= len(self.down):
                     self.counter = 0
                 self.image = self.down[int(self.counter)]
             case 3:
-                self.counter += .15
+                self.counter += .10
                 if self.counter >= len(self.up):
                     self.counter = 0
                 self.image = self.up[int(self.counter)]
@@ -239,6 +239,7 @@ class TileMap:
         yration = self.display_surface.get_height() / 1080
 
         self.zoom = 2.5 * (xratio + yration)/2
+        print(self.zoom)
 
         self.hitboxes = []
         self.load_hitboxes()
