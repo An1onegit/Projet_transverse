@@ -11,10 +11,6 @@ def Menu(mainGame):
 
     pygame.init()
 
-    # --- CONSTANTS ---
-    TEXT_COLOR = (255, 255, 255)
-    TITLE_TEXT_COLOR = (0, 0, 100) 
-
     # --- GAME STATE ---
     STATE_TITLE_SCREEN = 0
     STATE_MAIN_MENU = 1
@@ -25,10 +21,6 @@ def Menu(mainGame):
     # --- GAME INITIALIZATION ---
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
     pygame.display.set_caption("This Bear Is Fishing")
-
-    # fonts
-    font_menu = pygame.font.SysFont("Arial Black", 40)
-    font_title = pygame.font.SysFont("Arial", 50, bold=True)
 
     # loading images
     accueil_img = pygame.image.load("sources/img/proto_2_menu_projet_transverse.png").convert()
@@ -41,18 +33,15 @@ def Menu(mainGame):
 
     # --- BUTTON INSTANCE ---
     # positioning of the buttons
-    button_x = screen_width // 2 - play_img.get_width() * 0.86 // 2
-    play_button = Button(button_x, 350, play_img, 0.86)
-    quit_button = Button(button_x, 450, quit_img, 0.86)
-    settings_button = Button(button_x, 550, settings_img, 0.86)
-    tutorial_button = Button(button_x, 650, tutorial_img, 0.86)
+    button_x = screen_width // 2 - play_img.get_width() // 2
+    play_button = Button(button_x, 350, play_img, 1)
+    quit_button = Button(button_x, 450, quit_img, 1)
+    settings_button = Button(button_x, 550, settings_img, 1)
+    tutorial_button = Button(button_x, 650, tutorial_img, 1)
 
-    # --- GAME VARIABLES ---
     current_state = STATE_TITLE_SCREEN
+
     run = True
-
-
-    # --- GAME LOOP ---
     while run:
 
         for event in pygame.event.get():
@@ -63,9 +52,11 @@ def Menu(mainGame):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         current_state = STATE_MAIN_MENU 
+            elif current_state == STATE_MAIN_MENU:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        mainGame()
 
-
-        #screen by default
         screen.fill((177, 235, 52))
 
         if current_state == STATE_TITLE_SCREEN:

@@ -101,7 +101,7 @@ def Main():
                     fishing_mode = False
             else:
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_DELETE:
                         running = False
                     if event.key == pygame.K_i:
                         inventory_open = not inventory_open

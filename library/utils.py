@@ -220,7 +220,6 @@ class CameraGroup(pygame.sprite.Group):
 
             # pygame.draw.rect(self.display_surface, debug_rect_color, screen_camera_rect, debug_rect_thickness)
 
-
 class TileMap:
     """ Render the map, objects and hitboxes. """
     def __init__(self, map_file : str):
@@ -294,7 +293,6 @@ class TileMap:
                 interaction_zones.append(interaction)
 
         return interaction_zones
-
 
 class Button():
 	def __init__(self, x, y, image, scale):
