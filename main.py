@@ -1,4 +1,3 @@
-import ctypes
 import platform
 import pygame
 from library.utils import *
@@ -8,6 +7,7 @@ from library.inventory import Inventory
 
 def Main():
     if platform.system() == "Windows":
+        import ctypes
         user32 = ctypes.windll.user32
         user32.SetProcessDPIAware()
         screen_width = user32.GetSystemMetrics(0)
