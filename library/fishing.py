@@ -141,12 +141,10 @@ class FishingGame:
         self.waiting_for_restart = False
         self.last_caught_fish_text = None
 
-        # <<< CHANGE START >>> ==================================================
-        # BRO! PUT YOUR BACKGROUND IMAGE FILE PATH HERE
+    
         self.background_image_path = "sources/img/test_image.jpg" 
 
         try:
-            # 1. Load the ORIGINAL background image
             original_background = pygame.image.load(self.background_image_path).convert()
             original_width, original_height = original_background.get_size()
             print(f"Successfully loaded original background: {self.background_image_path} ({original_width}x{original_height})")
@@ -180,11 +178,9 @@ class FishingGame:
             # Set bg dimensions to screen size for the fallback
             self.bg_width = self.width
             self.bg_height = self.height
-        # <<< CHANGE END >>> ====================================================
 
         self.reset() # Call reset after loading/scaling the background
 
-    # ... (rest of the FishingGame class remains exactly the same as the previous version) ...
 
     def reset(self):
         self.projectile_position = None
@@ -361,10 +357,6 @@ class FishingGame:
         # Use integer offset for drawing calculations
         offset = int(self.camera_offset_x) if self.throwing or self.fishing_game.active else 0
 
-        # <<< NO CHANGE NEEDED HERE >>> =========================================
-        # The drawing code correctly uses self.bg_width and self.bg_height,
-        # which now hold the SCALED dimensions. The tiling will work perfectly
-        # because self.bg_height now equals self.height.
 
         # Calculate the starting X coordinate for tiling based on the offset
         start_x = -(offset % self.bg_width) # Use the possibly scaled width
@@ -373,7 +365,6 @@ class FishingGame:
         for y in range(0, self.height, self.bg_height): # self.bg_height == self.height now
             for x in range(start_x, self.width, self.bg_width):
                 self.screen.blit(self.background_image, (x, y))
-        # =====================================================================
 
 
         # --- Draw Ground and Water (relative to offset) ---
@@ -385,8 +376,7 @@ class FishingGame:
         water_draw_width = self.width * 5 # Arbitrarily large width
         pygame.draw.rect(self.screen, (0, 105, 148), (self.water_start_x - offset, self.ground_level, water_draw_width, self.height - self.ground_level))
 
-        # Optional: Draw a line indicating the water edge (might look weird with some backgrounds)
-        # pygame.draw.line(self.screen, (0, 80, 100), (self.water_start_x - offset, self.ground_level), (self.water_start_x - offset, self.height), 3)
+        pygame.draw.line(self.screen, (0, 80, 100), (self.water_start_x - offset, self.ground_level), (self.water_start_x - offset, self.height), 3)
 
 
         # --- Draw Player/Launch Point (relative to offset) ---
@@ -394,7 +384,7 @@ class FishingGame:
 
         # --- Draw Aiming UI (relative to offset) ---
         if not self.throwing and not self.fishing_game.active and not self.waiting_for_restart:
-            current_angle = 0 # Initialize
+            current_angle = 0 
             if self.aiming_angle:
                 current_angle = abs(math.sin(self.angle_timer * 2)) * 80 + 5
                 angle_rad = math.radians(current_angle)
