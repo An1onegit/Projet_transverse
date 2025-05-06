@@ -53,11 +53,9 @@ def Menu(mainGame):
 
     run = True
     while run:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
             if current_state == STATE_TITLE_SCREEN:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -69,7 +67,7 @@ def Menu(mainGame):
                     if event.key == pygame.K_ESCAPE:
                         run = False
 
-        screen.fill((177, 235, 52))
+        screen.fill((0, 0, 0))
 
         if current_state == STATE_TITLE_SCREEN:
             screen.blit(accueil_img, (0, 0))
@@ -80,12 +78,12 @@ def Menu(mainGame):
             if play_button.draw(screen):
                 mainGame()
 
-            if quit_button.draw(screen):
-                run = False 
-
             if settings_button.draw(screen):
                 print("Action: Options !") 
                 # current_state = STATE_SETTINGS 
+            
+            if quit_button.draw(screen):
+                run = False 
 
             # if tutorial_button.draw(screen):
             #     print("Action: Tutoriel !") 

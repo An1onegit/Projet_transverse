@@ -18,6 +18,7 @@ def Main():
 
     # Pygame setup
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+    
     pygame.display.set_caption("Bear's Fishing Empire")
 
     # Load map and scale it
