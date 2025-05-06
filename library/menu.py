@@ -3,6 +3,8 @@ import pygame
 from library.utils import *
 
 def Menu(mainGame):
+    pygame.init()
+    
     if platform.system() == "Windows":
         import ctypes
         ctypes.windll.user32.SetProcessDPIAware()
@@ -12,7 +14,6 @@ def Menu(mainGame):
         info = pygame.display.Info()
         screen_width, screen_height = info.current_w, info.current_h
 
-    pygame.init()
 
     # --- GAME STATE ---
     STATE_TITLE_SCREEN = 0

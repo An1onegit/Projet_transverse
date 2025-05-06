@@ -6,6 +6,7 @@ from library.menu import Menu
 from library.inventory import Inventory
 
 def Main():
+    pygame.init()
     if platform.system() == "Windows":
         import ctypes
         ctypes.windll.user32.SetProcessDPIAware()
@@ -16,7 +17,6 @@ def Main():
         screen_width, screen_height = info.current_w, info.current_h
 
     # Pygame setup
-    pygame.init()
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
     pygame.display.set_caption("Bear's Fishing Empire")
 
