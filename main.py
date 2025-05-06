@@ -157,12 +157,6 @@ def Main():
                         rod_rect = pygame.Rect(panel_x + 20, rod_y, 300, 30)
                         if rod_rect.collidepoint(pygame.mouse.get_pos()):
                             inventory.equip_rod(rod)
-                            print("New rod equiped")
-                            print(inventory.equipped_rod)
-                        is_equipped = rod == inventory.equipped_rod
-                        color = (0, 255, 0) if is_equipped else (200, 200, 255)
-                        rod_text = font.render(f"{rod}" + (" (Equipped)" if is_equipped else ""), True, color)
-                        screen.blit(rod_text, (panel_x + 20, rod_start_y + (idx + 1) * 30))
 
 
         if fishing_mode:
@@ -176,8 +170,8 @@ def Main():
 
             if inventory_open:
                 # Inventory Panel
-                panel_width = 500
-                panel_height = 400
+                panel_width = 800
+                panel_height = 600
                 panel_surface = pygame.Surface((panel_width, panel_height), pygame.SRCALPHA)
                 panel_surface.fill((50, 50, 50, 220))
                 panel_x = (screen.get_width() - panel_width) // 2
@@ -208,8 +202,10 @@ def Main():
                 rod_title = font.render("Rods:", True, (255, 255, 255))
                 screen.blit(rod_title, (panel_x + 20, rod_start_y))
                 for idx, rod in enumerate(inventory.rods):
-                    rod_text = font.render(f"{rod}", True, (200, 200, 255))
-                    screen.blit(rod_text, (panel_x + 20, rod_start_y + (idx + 1) * 30))
+                    is_equipped = rod == inventory.equipped_rod
+                    color = (0, 255, 0) if is_equipped else (200, 200, 255)
+                    rod_text = font.render(f"{rod}" + (" (Equipped)" if is_equipped else ""), True, color)
+                    screen.blit(rod_text, (panel_x + 20, rod_start_y + (idx + 1) * 30 + 10))
 
             if selling_open:
                 # Sell Panel

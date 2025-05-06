@@ -319,10 +319,10 @@ class FishingGame:
             self.waiting_for_restart = True
             return
 
-        if distance < 600: rarity = "Common"
-        elif distance < 1200: rarity = "Uncommon"
-        elif distance < 2000: rarity = "Rare"
-        elif distance < 3000: rarity = "Epic"
+        if distance < 500: rarity = "Common"
+        elif distance < 1500: rarity = "Uncommon"
+        elif distance < 3000: rarity = "Rare"
+        elif distance < 7000: rarity = "Epic"
         else: rarity = "Legendary"
 
         self.fish_name = random.choice(FISH_TIERS[rarity])

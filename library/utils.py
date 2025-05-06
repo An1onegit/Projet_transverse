@@ -401,7 +401,6 @@ class SoundManager:
             self.walking_channel.stop()
             self.walking = False
 
-
 def draw_text(text, font, text_col, x, y, screen, center=False):
     img = font.render(text, True, text_col)
     if center:
