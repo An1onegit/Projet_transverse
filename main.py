@@ -1,4 +1,5 @@
 import ctypes
+import platform
 import pygame
 from library.utils import *
 from library.fishing import FishingGame
@@ -6,11 +7,14 @@ from library.menu import Menu
 from library.inventory import Inventory
 
 def Main():
-    user32 = ctypes.windll.user32
-    user32.SetProcessDPIAware()
-
-    screen_width = user32.GetSystemMetrics(0)
-    screen_height = user32.GetSystemMetrics(1)
+    if platform.system() == "Windows":
+        user32 = ctypes.windll.user32
+        user32.SetProcessDPIAware()
+        screen_width = user32.GetSystemMetrics(0)
+        screen_height = user32.GetSystemMetrics(1)
+    else:
+        info = pygame.display.Info()
+        screen_width, screen_height = info.current_w, info.current_h
 
     # Pygame setup
     pygame.init()
@@ -103,6 +107,7 @@ def Main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DELETE:
                         running = False
+                        Menu(Main)
                     if event.key == pygame.K_i:
                         inventory_open = not inventory_open
                     if event.key == pygame.K_e:

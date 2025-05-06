@@ -168,7 +168,7 @@ class FishingGame:
 
     def handle_input(self, event):
         if self.waiting_for_restart:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 self.waiting_for_restart = False
                 self.reset()
             return
@@ -267,7 +267,7 @@ class FishingGame:
         self.fish_name = random.choice(FISH_TIERS[rarity])
         self.inventory.add_fish(self.fish_name)
 
-        self.last_caught_fish_text = f"You caught a {self.fish_name} ({rarity})!\nPress SPACE to fish again!"
+        self.last_caught_fish_text = f"You caught a {self.fish_name} ({rarity})!\nPress ENTER to fish again!"
         self.waiting_for_restart = True
 
     def draw(self):
