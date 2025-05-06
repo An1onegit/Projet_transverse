@@ -335,8 +335,7 @@ class FishingGame:
     def draw(self):
         offset = int(self.camera_offset_x) if self.throwing or self.fishing_game.active else 0
 
-        # Clear screen with a default color first (optional but good practice)
-        self.screen.fill((135, 206, 235)) # Default sky blue
+        self.screen.fill((0, 0, 0))
 
         # Calculate starting X for tiling
         start_x = -(offset % self.bg_width)
@@ -345,6 +344,9 @@ class FishingGame:
         if self.bg_height > 0: # Check height is valid
             for x in range(start_x, self.width, self.bg_width):
                 self.screen.blit(self.background_image, (x, 0)) # Draw tiles starting at the top
+
+        fishing_rod_text = self.font.render(self.inventory.equipped_rod, True, (255,255,255))
+        self.screen.blit(fishing_rod_text, (20, 20))
 
         # --- Draw Ground and Water (relative to offset) ---
         # These are drawn *after* the background, so they appear on top
@@ -390,12 +392,12 @@ class FishingGame:
 
         # --- Draw Projectile (relative to offset) ---
         if self.projectile_position:
-             proj_x = int(self.projectile_position[0]) - offset
-             proj_y = int(self.projectile_position[1])
-             pygame.draw.circle(self.screen, (255, 50, 50), (proj_x, proj_y), 6)
-             distance = max(0, int(self.projectile_position[0] - self.water_start_x))
-             distance_text_surf = self.font.render(f"Distance: {distance}px", True, (255, 255, 255))
-             self.screen.blit(distance_text_surf, (self.width - distance_text_surf.get_width() - 20, 20))
+            proj_x = int(self.projectile_position[0]) - offset
+            proj_y = int(self.projectile_position[1])
+            pygame.draw.circle(self.screen, (255, 50, 50), (proj_x, proj_y), 6)
+            distance = max(0, int(self.projectile_position[0] - self.water_start_x))
+            distance_text_surf = self.font.render(f"Distance: {distance}px", True, (255, 255, 255))
+            self.screen.blit(distance_text_surf, (self.width - distance_text_surf.get_width() - 20, 20))
 
 
         # --- Draw Splashes (relative to offset) ---
