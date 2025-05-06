@@ -29,7 +29,7 @@ def Main():
     tile_map.render_objects(sprite_group)
     interaction_zones = tile_map.load_interaction_zones()
     
-    player = Player(pos=(4500 * 1.5, 4500 * 1.5), groups=sprite_group, hitboxes=tile_map.hitboxes)
+    player = Player(pos=(4500 * 1.8, 4500 * 1.8), groups=sprite_group, hitboxes=tile_map.hitboxes)
     inventory = Inventory()
     sound_manager = SoundManager()
 
@@ -89,7 +89,7 @@ def Main():
     fps = 120
     clock = pygame.time.Clock()
 
-    sound_manager.play_music("forest")
+    sound_manager.play_music("forest", True, .4)
 
     running = True
     while running:

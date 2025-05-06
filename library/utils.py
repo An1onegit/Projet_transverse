@@ -256,7 +256,7 @@ class TileMap:
         xratio = self.display_surface.get_width() / 1920
         yration = self.display_surface.get_height() / 1080
 
-        self.zoom = 3.75
+        self.zoom = 4.5
 
         self.hitboxes = []
         self.load_hitboxes()
