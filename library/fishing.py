@@ -130,13 +130,13 @@ class FishingMiniGame:
 
 # Main Fishing Game
 class FishingGame:
-    def __init__(self, screen, font, inventory, fish_images, max_strength=1000):
+    def __init__(self, screen, font, inventory, fish_images):
         self.screen = screen
         self.font = font
         self.fish_images = fish_images
-        self.max_strength = max_strength
         self.width, self.height = screen.get_size()
         self.inventory = inventory
+        self.max_strength = self.inventory.get_rod_power()
         self.camera_offset_x = 0
         self.waiting_for_restart = False
         self.last_caught_fish_text = None
@@ -206,6 +206,9 @@ class FishingGame:
         self.camera_offset_x = 0
         self.waiting_for_restart = False
         self.last_caught_fish_text = None
+
+        self.fish_name = None
+        self.max_strength = self.inventory.get_rod_power()
 
 
     def handle_input(self, event):
@@ -307,13 +310,14 @@ class FishingGame:
 
         distance = 0
         if self.projectile_position:
-             distance = self.projectile_position[0] - self.water_start_x
-             if distance < 0: distance = 0
+            distance = self.projectile_position[0] - self.water_start_x
+            if distance < 0: distance = 0
 
-        if not self.fishing_game.success and self.fishing_game.total_time <=0:
-             self.last_caught_fish_text = "Ran out of time!\nPress ENTER to fish again!"
-             self.waiting_for_restart = True
-             return
+        if not self.fishing_game.success and self.fishing_game.total_time <= 0:
+            self.fish_name = None
+            self.last_caught_fish_text = "Ran out of time!\nPress ENTER to fish again!"
+            self.waiting_for_restart = True
+            return
 
         if distance < 600: rarity = "Common"
         elif distance < 1200: rarity = "Uncommon"

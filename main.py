@@ -3,7 +3,7 @@ import pygame
 from library.utils import *
 from library.fishing import FishingGame
 from library.menu import Menu
-from library.inventory import Inventory
+from library.inventory import Inventory, ROD_STATS
 
 def Main():
     pygame.init()
@@ -29,7 +29,7 @@ def Main():
     tile_map.render_objects(sprite_group)
     interaction_zones = tile_map.load_interaction_zones()
     
-    player = Player(pos=(4500, 4500), groups=sprite_group, hitboxes=tile_map.hitboxes)
+    player = Player(pos=(4500 * 1.5, 4500 * 1.5), groups=sprite_group, hitboxes=tile_map.hitboxes)
     inventory = Inventory()
     sound_manager = SoundManager()
 
@@ -57,9 +57,9 @@ def Main():
         FISH_IMAGES[key] = pygame.transform.scale(FISH_IMAGES[key], (40, 40))
     FISH_PRICES = {
         "Small Carp": 5,
-        "Tiny Bass": 7,
-        "Minnow": 10,
-        "Bluegill": 15,
+        "Tiny Bass": 10,
+        "Minnow": 15,
+        "Bluegill": 16,
         "Pike": 20,
         "Perch": 25,
         "Golden Trout": 40,
@@ -80,9 +80,10 @@ def Main():
     shopping_open = False
 
     ROD_SHOP = {
-        "Advanced Rod":100,
-        "Super Rod": 300,
-        "Legendary Rod": 1000
+        rod: price for rod, price in zip(
+            ["Advanced Rod", "Super Rod", "Legendary Rod"],
+            [100, 300, 1000]
+        )
     }
 
     fps = 120
@@ -150,6 +151,19 @@ def Main():
                                 # Sell this fish
                                 inventory.buy_rod(rod, ROD_SHOP[rod])
                             break
+                elif inventory_open:
+                    for idx, rod in enumerate(inventory.rods):
+                        rod_y = rod_start_y + (idx + 1) * 30
+                        rod_rect = pygame.Rect(panel_x + 20, rod_y, 300, 30)
+                        if rod_rect.collidepoint(pygame.mouse.get_pos()):
+                            inventory.equip_rod(rod)
+                            print("New rod equiped")
+                            print(inventory.equipped_rod)
+                        is_equipped = rod == inventory.equipped_rod
+                        color = (0, 255, 0) if is_equipped else (200, 200, 255)
+                        rod_text = font.render(f"{rod}" + (" (Equipped)" if is_equipped else ""), True, color)
+                        screen.blit(rod_text, (panel_x + 20, rod_start_y + (idx + 1) * 30))
+
 
         if fishing_mode:
             fishing_game.update(dt)

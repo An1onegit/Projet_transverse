@@ -1,8 +1,16 @@
+ROD_STATS = {
+        "Basic Rod": 500,
+        "Advanced Rod": 800,
+        "Super Rod": 1200,
+        "Legendary Rod": 1500
+    }
+
 class Inventory:
     def __init__(self):
-        self.fishes = []  # list of fish caught
-        self.rods = ["Basic Rod"]  # player starts with 1 rod
-        self.money = 0  # start with $0
+        self.fishes = []
+        self.rods = ["Basic Rod"]
+        self.money = 0
+        self.equipped_rod = "Basic Rod"
 
     def add_fish(self, fish):
         self.fishes.append(fish)
@@ -21,6 +29,9 @@ class Inventory:
             return True
         return False
 
-    def add_money(self):
-        self.money += 1000
-    
+    def equip_rod(self, rod_name):
+        if rod_name in self.rods:
+            self.equipped_rod = rod_name
+
+    def get_rod_power(self):
+        return ROD_STATS.get(self.equipped_rod, 500)
