@@ -39,12 +39,15 @@ Here’s what our game looks like:
 
 
 - **Gameplay:**  
-  ![image](https://github.com/user-attachments/assets/5e21e08b-bfe4-4ce8-be92-523cccaa72a7)
-
-  ![image](https://github.com/user-attachments/assets/14019fb9-a708-4d42-b65c-7342b6e174df)
-
-  
-
+   ![image](https://github.com/user-attachments/assets/4d1a83df-6c34-4539-adb6-45c8484435c6)
+   ![image](https://github.com/user-attachments/assets/fb411e8f-5b03-4725-badf-fc09bb67b4d7)
+   ![image](https://github.com/user-attachments/assets/86adbd96-cd74-43a2-96f8-0874e4d0e6e9)
+   ![image](https://github.com/user-attachments/assets/7971382f-1eb1-48ba-9dcd-7656fc13ccf9)
+   ![image](https://github.com/user-attachments/assets/13b056f4-b284-4e83-a52b-03a3582c5e33)
+   ![image](https://github.com/user-attachments/assets/0d081555-ff8a-45d6-92c0-66e43d34bcb2)
+   ![image](https://github.com/user-attachments/assets/e547375a-a962-4255-8192-dc5a9a7ec151)
+   ![image](https://github.com/user-attachments/assets/87a3f1c7-97c3-4861-b653-d6d53052bd87)
+   ![image](https://github.com/user-attachments/assets/fb48a78c-4c2f-4216-b501-db07f2d10073)
 
 ## ✨ Future Improvements
 - 🚀 Expand with new maps and challenges  
