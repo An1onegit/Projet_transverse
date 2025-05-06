@@ -273,6 +273,7 @@ class FishingGame:
                         dx = random.uniform(-100, 100)
                         dy = random.uniform(-300, -100)
                         self.splashes.append(SplashParticle(x, self.ground_level, dx, dy))
+                        self.sound_manager.play_sfx("splash")
 
                 self.vy = -self.vy * ENERGY_LOSS_FACTOR
                 self.vx = self.vx * ENERGY_LOSS_FACTOR
@@ -352,7 +353,6 @@ class FishingGame:
         # Draw the water line (optional, kept from original)
         pygame.draw.line(self.screen, (0, 80, 100), (self.water_start_x - offset, self.ground_level), (self.water_start_x - offset, self.height), 3)
 
-
         # --- Draw Player/Launch Point (relative to offset) ---
         pygame.draw.circle(self.screen, (0, 0, 0), (self.launch_x - offset, int(self.launch_y)), 6)
 
@@ -400,7 +400,6 @@ class FishingGame:
             splash_y = int(splash.y)
             if splash.life > 0:
                 pygame.draw.circle(self.screen, (255, 255, 255), (splash_x, splash_y), 2)
-                self.sound_manager.play_sfx("splash")
 
         # --- Draw Fishing Minigame UI (Not relative to offset - fixed position) ---
         self.fishing_game.draw()
