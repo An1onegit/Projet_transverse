@@ -35,3 +35,15 @@ class Inventory:
 
     def get_rod_power(self):
         return ROD_STATS.get(self.equipped_rod, 500)
+    
+    def get_save_data(self):
+        """Return the data we want to save, in a serializable form."""
+        return {
+            "items": self.items,
+            "level": self.level,
+        }
+
+    def load_from_data(self, data):
+        """Load game data (like inventory items) from saved data."""
+        self.items = data.get("items", [])
+        self.level = data.get("level", 1)

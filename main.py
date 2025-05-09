@@ -4,6 +4,7 @@ from library.utils import *
 from library.fishing import FishingGame
 from library.menu import Menu
 from library.inventory import Inventory, ROD_STATS
+from library.save_system import *
 
 def Main():
     pygame.init()
@@ -32,6 +33,45 @@ def Main():
     player = Player(pos=(4500 * 1.8, 4500 * 1.8), groups=sprite_group, hitboxes=tile_map.hitboxes)
     inventory = Inventory()
     sound_manager = SoundManager()
+
+    # Attempt to load game data
+    loaded_game_state = load_game()
+
+    if loaded_game_state:
+        # Load player data
+        player_state = loaded_game_state.get("player", get_default_player_data(player.position.x, player.position.y))
+        player.position.x = player_state.get("pos_x", player.position.x)
+        player.position.y = player_state.get("pos_y", player.position.y)
+
+        player.hitbox.center = player.position
+        player.rect.midbottom = player.hitbox.midbottom
+
+        inventory_state = loaded_game_state.get("inventory", get_default_inventory_data())
+        inventory.money = inventory_state.get("money", inventory.money)
+        inventory.fishes = inventory_state.get("fishes", inventory.fishes)
+
+        saved_rods = inventory_state.get("rods")
+        if saved_rods is not None and isinstance(saved_rods, list) and len(saved_rods) > 0:
+            inventory.rods = saved_rods
+        elif not inventory.rods:
+             inventory.rods = ["Basic Rod"]
+
+
+        saved_equipped_rod = inventory_state.get("equipped_rod")
+        if saved_equipped_rod is not None and saved_equipped_rod in inventory.rods:
+            inventory.equipped_rod = saved_equipped_rod
+        elif inventory.rods: 
+            inventory.equipped_rod = inventory.rods[0]
+        else:
+            inventory.rods = ["Basic Rod"]
+            inventory.equipped_rod = "Basic Rod"
+            
+        if inventory.equipped_rod not in inventory.rods:
+            if inventory.rods:
+                 inventory.equipped_rod = inventory.rods[0]
+            else:
+                 inventory.rods = ["Basic Rod"]
+                 inventory.equipped_rod = "Basic Rod"
 
     # Fishing mini-game setup
     font = pygame.font.SysFont(None, 60)
@@ -109,6 +149,7 @@ def Main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DELETE:
                         running = False
+                        save_game(player.hitbox.center, inventory.to_dict())
                         Menu(Main)
                     if event.key == pygame.K_m:
                         running = False
@@ -286,6 +327,19 @@ def Main():
 
         pygame.display.flip()
 
+    # ---- START OF MODIFICATION FOR SAVING ----
+    # Prepare data for saving
+    player_data_to_save = {
+        "position": player.position  # player.position is a pygame.math.Vector2
+    }
+    inventory_data_to_save = {
+        "money": inventory.money,
+        "fishes": inventory.fishes,
+        "rods": inventory.rods,
+        "equipped_rod": inventory.equipped_rod
+    }
+    save_game(player_data_to_save, inventory_data_to_save)
+    # ---- END OF MODIFICATION FOR SAVING ----
     pygame.quit()
 
 if __name__ == "__main__":
