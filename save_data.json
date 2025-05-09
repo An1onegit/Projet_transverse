@@ -1,10 +1,10 @@
 {
     "player": {
-        "pos_x": 9068.901246303993,
-        "pos_y": 7320.279351871794
+        "pos_x": 8228.0,
+        "pos_y": 8292.0
     },
     "inventory": {
-        "money": 5,
+        "money": 0,
         "fishes": [],
         "rods": [
             "Basic Rod"

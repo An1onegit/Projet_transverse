@@ -25,7 +25,7 @@ def Main():
 
     if not os.path.exists(SAVE_FILE_PATH):
         print("No save file found, playing cinematic.")
-        cinematic_main_font_size = max(24, int(screen_height / 28))
+        cinematic_main_font_size = max(24, int(screen_height / 15))
         cinematic_prompt_font_size = max(18, int(screen_height / 40))
         
         cinematic_main_font = pygame.font.SysFont(None, cinematic_main_font_size)

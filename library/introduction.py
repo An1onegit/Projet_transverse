@@ -4,21 +4,23 @@ def get_cinematic_scenes():
     return [
         {
             "image_path": "sources/img/introduction/storm.png",
-            "text": "In the heart of a whispering forest, where ancient trees touched the sky and rivers sang forgotten songs, lived a bear unlike any other."
+            "text": "In the dead of night, when the sea churned with primal rage and the wind howled like a cursed beast, a solitary figure braved the fury of nature. The bear, once a seasoned adventurer with a heart full of hope, gripped the helm of his boat with a steady paw, knowing that the journey ahead would be his greatest test. Little did he know, the storm would shatter not just his vessel, but his very fate."
         },
         {
             "image_path": "sources/img/introduction/storm.png", 
-            "text": "This bear, known to the rustling leaves and babbling brooks as Barnaby, wasn't content with just berries and naps. He had a peculiar glint in his eye, a yearning for something more..."
+            "text": "The heavens split open with violent flashes of lightning, and the waves rose like monstrous titans, towering over the bear’s boat. The world itself seemed to tear apart. He fought, desperately trying to steer through the chaos, but nature’s wrath was insurmountable. The bear’s boat groaned, its timbers splintering as the storm’s final, savage blow struck. The vessel was torn asunder, and the bear was cast into the merciless sea, sinking into oblivion… until nothing but the whispering of the wind remained."
         },
         {
             "image_path": "sources/img/introduction/storm.png",
-            "text": "One day, watching a glint of silver in the water, Barnaby discovered the thrill of fishing! It wasn't just food; it was an art, a challenge, a passion."
+            "text": "When the storm passed and the world fell silent, the bear awoke on a shore unlike any he had known. His boat—his lifeline, his means of adventure—was shattered beyond repair, the pieces strewn across the shore like broken dreams. Alone, stranded on an unknown island, the bear's heart raced with panic. Was this the end of his journey, or the beginning of something far darker and more unforgiving?"
         },
         {
             "image_path": "sources/img/introduction/storm.png",
-            "text": "And so, 'This Bear is Fishing' began his journey, dreaming of becoming the greatest angler the forest had ever seen, building a true Fishing Empire from a humble pawful of fish."
+            "text": "The once-proud adventurer, now stranded and desperate, slowly rose to his feet. His stomach gnawed at him with hunger, but his mind was clouded with thoughts of escape. This island, cursed by its own isolation, offered no answers. Only unknown dangers lurked beneath its strange, unwelcoming surface. Yet, the bear knew he had no choice. To survive, to find hope, he would need to navigate this hostile land—one step at a time. The wreckage of his boat was the first of many challenges to come. But the fire in his heart burned brighter than ever. His adventure was not over. It was only just beginning."
         },
     ]
+
+
 
 # function from https://www.pygame.org/wiki/TextWrap
 def render_text_wrapped(surface, text, font, color, rect_area, aa=True, bkg=None):
