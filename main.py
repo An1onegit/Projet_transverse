@@ -5,6 +5,7 @@ from library.fishing import FishingGame
 from library.menu import Menu
 from library.inventory import Inventory, ROD_STATS
 from library.save_system import *
+from library.introduction import play_cinematic, get_cinematic_scenes
 
 def Main():
     pygame.init()
@@ -21,6 +22,18 @@ def Main():
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
     
     pygame.display.set_caption("Bear's Fishing Empire")
+
+    if not os.path.exists(SAVE_FILE_PATH):
+        print("No save file found, playing cinematic.")
+        cinematic_main_font_size = max(24, int(screen_height / 28))
+        cinematic_prompt_font_size = max(18, int(screen_height / 40))
+        
+        cinematic_main_font = pygame.font.SysFont(None, cinematic_main_font_size)
+        cinematic_prompt_font = pygame.font.SysFont(None, cinematic_prompt_font_size)
+
+        actual_cinematic_scenes = get_cinematic_scenes()
+        
+        play_cinematic(screen, cinematic_main_font, cinematic_prompt_font, actual_cinematic_scenes)
 
     # Load map and scale it
     tile_map = TileMap("sources/maps/mapTest2.tmx")
