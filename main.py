@@ -3,12 +3,14 @@ import pygame
 from library.utils import *
 from library.fishing import FishingGame
 from library.menu import Menu
-from library.inventory import Inventory, ROD_STATS
+from library.inventory import Inventory
 from library.save_system import *
 from library.introduction import play_cinematic, get_cinematic_scenes
 
 def Main():
     pygame.init()
+
+    # get the screen size depending on the user's plateform (Windows / Mac)
     if platform.system() == "Windows":
         import ctypes
         ctypes.windll.user32.SetProcessDPIAware()
@@ -18,11 +20,11 @@ def Main():
         info = pygame.display.Info()
         screen_width, screen_height = info.current_w, info.current_h
 
-    # Pygame setup
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
     
     pygame.display.set_caption("Bear's Fishing Empire")
 
+    # cinematic if first time playing
     if not os.path.exists(SAVE_FILE_PATH):
         print("No save file found, playing cinematic.")
         cinematic_main_font_size = max(24, int(screen_height / 15))
@@ -35,7 +37,7 @@ def Main():
         
         play_cinematic(screen, cinematic_main_font, cinematic_prompt_font, actual_cinematic_scenes)
 
-    # Load map and scale it
+    # load map and scale it
     tile_map = TileMap("sources/maps/mapTest2.tmx")
     map_surface = pygame.transform.scale_by(tile_map.surface, tile_map.zoom)
 
@@ -47,7 +49,7 @@ def Main():
     inventory = Inventory()
     sound_manager = SoundManager()
 
-    # Attempt to load game data
+    # try to load game data
     loaded_game_state = load_game()
 
     if loaded_game_state:
