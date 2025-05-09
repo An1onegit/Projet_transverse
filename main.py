@@ -149,7 +149,16 @@ def Main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DELETE:
                         running = False
-                        save_game(player.hitbox.center, inventory.to_dict())
+                        player_data_to_save = {
+                        "position": player.position
+                        }
+                        inventory_data_to_save = {
+                            "money": inventory.money,
+                            "fishes": inventory.fishes,
+                            "rods": inventory.rods,
+                            "equipped_rod": inventory.equipped_rod
+                        }
+                        save_game(player_data_to_save, inventory_data_to_save)
                         Menu(Main)
                     if event.key == pygame.K_m:
                         running = False
@@ -174,7 +183,7 @@ def Main():
                     for idx, fish in enumerate(inventory.fishes):
                         fish_x = panel_x + 20
                         fish_y = panel_y + 70 + idx * 50
-                        fish_rect = pygame.Rect(fish_x, fish_y, 300, 40)  # area for each fish
+                        fish_rect = pygame.Rect(fish_x, fish_y, 300, 40)  
 
                         if fish_rect.collidepoint(pygame.mouse.get_pos()):
                             # Sell this fish
@@ -185,11 +194,10 @@ def Main():
                     for idx, rod in enumerate(ROD_SHOP):
                         rod_x = panel_x + 20
                         rod_y = panel_y + 70 + idx * 50
-                        rod_rect = pygame.Rect(rod_x, rod_y, 300, 40)  # area for each fish
+                        rod_rect = pygame.Rect(rod_x, rod_y, 300, 40)  
 
                         if rod_rect.collidepoint(pygame.mouse.get_pos()):
                             if rod not in inventory.rods:
-                                # Sell this fish
                                 inventory.buy_rod(rod, ROD_SHOP[rod])
                             break
                 elif inventory_open:
@@ -202,8 +210,8 @@ def Main():
 
         if fishing_mode:
             fishing_game.update(dt)
-            screen.fill((134, 203, 146))  # Background color during fishing
-            fishing_game.draw()          # Draw the fishing mini-game
+            screen.fill((134, 203, 146))  
+            fishing_game.draw()
         else:
             screen.fill((134, 203, 146))
             sprite_group.update(dt)
@@ -327,10 +335,8 @@ def Main():
 
         pygame.display.flip()
 
-    # ---- START OF MODIFICATION FOR SAVING ----
-    # Prepare data for saving
     player_data_to_save = {
-        "position": player.position  # player.position is a pygame.math.Vector2
+        "position": player.position
     }
     inventory_data_to_save = {
         "money": inventory.money,
@@ -339,7 +345,6 @@ def Main():
         "equipped_rod": inventory.equipped_rod
     }
     save_game(player_data_to_save, inventory_data_to_save)
-    # ---- END OF MODIFICATION FOR SAVING ----
     pygame.quit()
 
 if __name__ == "__main__":
