@@ -212,7 +212,6 @@ def Main():
                         fish_rect = pygame.Rect(fish_x, fish_y, 300, 40)  
 
                         if fish_rect.collidepoint(pygame.mouse.get_pos()):
-                            # Sell this fish
                             inventory.sell_fish(fish, FISH_PRICES[fish])
                             sound_manager.play_sfx("money")
                             break

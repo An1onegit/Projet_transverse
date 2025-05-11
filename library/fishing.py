@@ -141,6 +141,19 @@ class FishingGame:
 
         self.background_image_path = "sources/img/background.png"
 
+        self.bear_rod_sprites = {
+            "Basic Rod": pygame.image.load("sources/img/rods/bearBasic.png").convert_alpha(),
+            "Advanced Rod": pygame.image.load("sources/img/rods/bearAdvanced.png").convert_alpha(),
+            "Super Rod": pygame.image.load("sources/img/rods/bearSuper.png").convert_alpha(),
+            "Legendary Rod": pygame.image.load("sources/img/rods/bearLegendary.png").convert_alpha()
+        }
+
+        BEAR_SPRITE_SIZE = (int(self.height * 0.2), int(self.height * 0.2))
+        for rod_name in self.bear_rod_sprites:
+            self.bear_rod_sprites[rod_name] = pygame.transform.scale(self.bear_rod_sprites[rod_name], BEAR_SPRITE_SIZE)
+        
+        self.current_bear_sprite = None
+
         original_background = pygame.image.load(self.background_image_path).convert()
         original_width, original_height = original_background.get_size()
         print(f"Successfully loaded original background: {self.background_image_path} ({original_width}x{original_height})")
@@ -194,6 +207,10 @@ class FishingGame:
 
         self.fish_name = None
         self.max_strength = self.inventory.get_rod_power()
+
+        equipped_rod_name = self.inventory.equipped_rod
+        if equipped_rod_name in self.bear_rod_sprites:
+            self.current_bear_sprite = self.bear_rod_sprites[equipped_rod_name]
 
 
     def handle_input(self, event):
@@ -336,6 +353,34 @@ class FishingGame:
         pygame.draw.line(self.screen, (0, 80, 100), (self.water_start_x - offset, self.ground_level), (self.water_start_x - offset, self.height), 3)
 
         pygame.draw.circle(self.screen, (0, 0, 0), (self.launch_x - offset, int(self.launch_y)), 6)
+
+        if self.current_bear_sprite:
+            # Position the bear sprite.
+            # You need to adjust sprite_x so the bear's hand/rod visually aligns with self.launch_x.
+            # This usually means the sprite's bottom-center or bottom-right is near self.launch_x.
+            # Let's assume self.launch_x is where the line *exits* from the bear/rod.
+            # If self.launch_x is the bear's center, sprite_x = self.launch_x - self.current_bear_sprite.get_width() // 2
+            # If self.launch_x is to the right of the bear (casting point),
+            # sprite_x = self.launch_x - self.current_bear_sprite.get_width() # (Or some offset from width)
+            
+            # Let's try aligning the bottom-left of the bear sprite slightly to the left of launch_x,
+            # assuming the bear is facing right and the rod extends from its right.
+            # You will need to experiment with this offset based on your sprite's anchor point.
+            bear_sprite_width = self.current_bear_sprite.get_width()
+            bear_sprite_height = self.current_bear_sprite.get_height()
+            
+            # Example: Position bear so its right edge (approx where rod tip is) is near launch_x
+            # This means the bear's left edge is at launch_x - bear_sprite_width + some_offset_for_rod_tip
+            # Let's assume self.launch_x is the point where the fishing line *starts*.
+            # If the bear sprite includes the rod, and the casting point is, say, 3/4ths of the way
+            # across the bear sprite from its left edge:
+            effective_cast_point_offset_in_sprite = bear_sprite_width * 0.75 # Adjust this ratio
+            sprite_x = self.launch_x - effective_cast_point_offset_in_sprite
+            sprite_y = self.ground_level - bear_sprite_height # Align bottom of sprite with ground_level
+
+            self.screen.blit(self.current_bear_sprite, (sprite_x - offset, sprite_y))
+        else: # Fallback if no sprite (e.g. the small circle)
+            pygame.draw.circle(self.screen, (0,0,0), (self.launch_x - offset, int(self.launch_y)), 6)
 
         # Draw Aiming UI
         if not self.throwing and not self.fishing_game.active and not self.waiting_for_restart:
