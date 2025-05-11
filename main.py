@@ -128,6 +128,17 @@ def Main():
         "Rainbow Koi": 1000
     }
 
+    ROD_IMAGES = {
+        "Basic Rod": pygame.image.load("sources/img/rods/basic.png").convert_alpha(),
+        "Advanced Rod": pygame.image.load("sources/img/rods/advanced.png").convert_alpha(),
+        "Super Rod": pygame.image.load("sources/img/rods/super.png").convert_alpha(),
+        "Legendary Rod": pygame.image.load("sources/img/rods/legendary.png").convert_alpha()
+    }
+
+    ROD_IMAGE_SIZE = (60, 60)
+    for key in ROD_IMAGES:
+        ROD_IMAGES[key] = pygame.transform.scale(ROD_IMAGES[key], ROD_IMAGE_SIZE)
+    
     fishing_game = FishingGame(screen, font, inventory, FISH_IMAGES)
     fishing_mode = False
     inventory_open = False
@@ -206,21 +217,26 @@ def Main():
                             sound_manager.play_sfx("money")
                             break
                 elif shopping_open:
-                    for idx, rod in enumerate(ROD_SHOP):
-                        rod_x = panel_x + 20
-                        rod_y = panel_y + 70 + idx * 50
-                        rod_rect = pygame.Rect(rod_x, rod_y, 300, 40)  
+                    for idx, rod_name in enumerate(ROD_SHOP):
+                        rod_display_y = panel_y + 70 + idx * (ROD_IMAGE_SIZE[1] + 20)
+                        clickable_width = ROD_IMAGE_SIZE[0] + 300
+                        rod_rect = pygame.Rect(panel_x + 20, rod_display_y, clickable_width, ROD_IMAGE_SIZE[1])
 
                         if rod_rect.collidepoint(pygame.mouse.get_pos()):
-                            if rod not in inventory.rods:
-                                inventory.buy_rod(rod, ROD_SHOP[rod])
+                            if rod_name not in inventory.rods:
+                                if inventory.buy_rod(rod_name, ROD_SHOP[rod_name]):
+                                    sound_manager.play_sfx("money")
                             break
                 elif inventory_open:
                     for idx, rod in enumerate(inventory.rods):
-                        rod_y = rod_start_y + (idx + 1) * 30
-                        rod_rect = pygame.Rect(panel_x + 20, rod_y, 300, 30)
+                        rod_display_y = rod_start_y + (idx + 1) * 50
+                        
+                        clickable_width = ROD_IMAGE_SIZE[0] + 300
+                        rod_rect = pygame.Rect(panel_x + 20, rod_display_y, clickable_width, ROD_IMAGE_SIZE[1])
+                        
                         if rod_rect.collidepoint(pygame.mouse.get_pos()):
                             inventory.equip_rod(rod)
+                            break
 
 
         if fishing_mode:
@@ -265,11 +281,26 @@ def Main():
                 rod_start_y = fish_start_y + len(inventory.fishes) * 40 + 30
                 rod_title = font.render("Rods:", True, (255, 255, 255))
                 screen.blit(rod_title, (panel_x + 20, rod_start_y))
-                for idx, rod in enumerate(inventory.rods):
-                    is_equipped = rod == inventory.equipped_rod
+
+                for idx, rod_name in enumerate(inventory.rods):
+                    is_equipped = rod_name == inventory.equipped_rod
                     color = (0, 255, 0) if is_equipped else (200, 200, 255)
-                    rod_text = font.render(f"{rod}" + (" (Equipped)" if is_equipped else ""), True, color)
-                    screen.blit(rod_text, (panel_x + 20, rod_start_y + (idx + 1) * 30 + 10))
+                    
+                    current_rod_y = rod_start_y + (idx + 1) * 50 # Increased spacing for image
+                    
+                    # Draw the rod image
+                    if rod_name in ROD_IMAGES:
+                        img = ROD_IMAGES[rod_name]
+                        img_x = panel_x + 20
+                        img_y = current_rod_y + (font.get_height() - img.get_height()) // 2 
+                        screen.blit(img, (img_x, img_y))
+                        text_offset_x = img.get_width() + 10
+                    else:
+                        text_offset_x = 0
+
+                    rod_text_content = f"{rod_name}" + (" (Equipped)" if is_equipped else "")
+                    rod_text = font.render(rod_text_content, True, color)
+                    screen.blit(rod_text, (panel_x + 20 + text_offset_x, current_rod_y))
 
             if selling_open:
                 # Sell Panel
@@ -324,17 +355,35 @@ def Main():
                 screen.blit(money_text, (panel_x + panel_width - money_text.get_width() - 20, panel_y + 20))
 
                 fishing_rod_start_y = panel_y + 70
-                for idx, rod in enumerate(ROD_SHOP):
+                for idx, rod_name in enumerate(ROD_SHOP):
+                    current_rod_y = fishing_rod_start_y + idx * (ROD_IMAGE_SIZE[1] + 20)
+                    
                     img_x = panel_x + 20
-                    img_y = fishing_rod_start_y + idx * 50
-                    if rod in inventory.rods:
-                        rod_text = font.render(f"{rod} - OWNED", True, (100, 100, 100))
+                    text_offset_x = 0
+
+                    # Draw the rod image
+                    if rod_name in ROD_IMAGES:
+                        img = ROD_IMAGES[rod_name]
+                        img_y = current_rod_y + (font.get_height() - img.get_height()) // 2
+                        screen.blit(img, (img_x, img_y))
+                        text_offset_x = img.get_width() + 10
+                    
+                    rod_display_text = ""
+                    text_color = (255,255,255)
+
+                    if rod_name in inventory.rods:
+                        rod_display_text = f"{rod_name} - OWNED"
+                        text_color = (100, 100, 100)
                     else:
-                        if inventory.money >= ROD_SHOP[rod]:
-                            rod_text = font.render(f"{rod} - ${ROD_SHOP[rod]}", True, (100, 255, 100))
+                        if inventory.money >= ROD_SHOP[rod_name]:
+                            rod_display_text = f"{rod_name} - ${ROD_SHOP[rod_name]}"
+                            text_color = (100, 255, 100)
                         else:
-                            rod_text = font.render(f"{rod} - ${ROD_SHOP[rod]}", True, (255, 100, 100))
-                    screen.blit(rod_text, (img_x + 50, img_y + 10))
+                            rod_display_text = f"{rod_name} - ${ROD_SHOP[rod_name]}"
+                            text_color = (255, 100, 100)
+                    
+                    rod_text_surface = font.render(rod_display_text, True, text_color)
+                    screen.blit(rod_text_surface, (img_x + text_offset_x, current_rod_y))
 
                 # Instructions
                 info_text = font.render("Click a fishing rod to buy it!", True, (255, 255, 0))

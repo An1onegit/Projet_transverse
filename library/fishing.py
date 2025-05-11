@@ -10,7 +10,6 @@ MAX_BOUNCES = 3
 FISH_GAME_TIME = 15
 FISH_BAR_SPEED = 300
 
-# Fish tiers
 FISH_TIERS = {
     "Common": ["Small Carp", "Tiny Bass", "Minnow"],
     "Uncommon": ["Bluegill", "Pike", "Perch"],
@@ -20,7 +19,6 @@ FISH_TIERS = {
 }
 
 
-# Splash particle class
 class SplashParticle:
     def __init__(self, x, y, dx, dy):
         self.x = x
@@ -39,7 +37,6 @@ class SplashParticle:
         if self.life > 0:
             pygame.draw.circle(screen, (255, 255, 255), (int(self.x), int(self.y)), 2)
 
-# Fishing minigame
 class FishingMiniGame:
     def __init__(self, screen, font, fishing_game):
         self.screen = screen
@@ -76,11 +73,11 @@ class FishingMiniGame:
         if not self.active:
             return
 
-        self.total_time -= dt  # Subtract delta time from total time
+        self.total_time -= dt
 
         if self.total_time <= 0:
-            self.active = False  # End the game when time runs out
-            self.fishing_game.get_fish()  # Give the fish (or handle accordingly)
+            self.active = False  
+            self.fishing_game.get_fish()
 
         if keys[pygame.K_SPACE]:
             self.cursor_speed += 7300 * dt
@@ -128,7 +125,6 @@ class FishingMiniGame:
         timer_text = self.font.render(f"Time Left: {int(self.total_time)}s", True, (255,255,255))
         self.screen.blit(timer_text, (self.width // 2 - timer_text.get_width() // 2, fill_bar_y + 40))
 
-# Main Fishing Game
 class FishingGame:
     def __init__(self, screen, font, inventory, fish_images):
         self.screen = screen
@@ -143,38 +139,27 @@ class FishingGame:
 
         self.ground_level = self.height - int(self.height * 0.2)
 
-        # Provide the path to your image file here
-        self.background_image_path = "sources/img/background.png" # Or your actual path
+        self.background_image_path = "sources/img/background.png"
 
-        # Load the original image
         original_background = pygame.image.load(self.background_image_path).convert()
         original_width, original_height = original_background.get_size()
         print(f"Successfully loaded original background: {self.background_image_path} ({original_width}x{original_height})")
 
-        target_height = self.ground_level  # Target the height above the ground
-        scaled_width = original_width # Default if calculation fails
-        scaled_height = target_height # Default if calculation fails
+        target_height = self.ground_level
+        scaled_width = original_width
+        scaled_height = target_height
 
-        if original_height > 0 and target_height > 0: # Avoid division by zero
+        if original_height > 0 and target_height > 0:
             aspect_ratio = original_width / original_height
-            scaled_width = int(target_height * aspect_ratio) # Calculate width based on target height
-            # scaled_height is already target_height
-        else:
-            print("Warning: Original image height or target height is zero, using default scaling.")
-            # Use screen width and target height if aspect ratio fails
-            scaled_width = self.width
-            scaled_height = target_height
+            scaled_width = int(target_height * aspect_ratio)
 
-        # Scale the image to the new dimensions
         self.background_image = pygame.transform.scale(original_background, (scaled_width, scaled_height))
 
-        # Store the SCALED dimensions for tiling
         self.bg_width = self.background_image.get_width()
-        self.bg_height = self.background_image.get_height() # This should now == self.ground_level
+        self.bg_height = self.background_image.get_height()
         print(f"Background scaled to fit sky area: {self.bg_width}x{self.bg_height}")
-        # <<< CHANGE END 2 >>>
 
-        self.reset() # Call reset after loading/scaling the background
+        self.reset()
         self.sound_manager = SoundManager()
 
 
@@ -302,12 +287,6 @@ class FishingGame:
         self.reset()
 
     def get_fish(self):
-        if not self.inventory:
-            print("No inventory linked!")
-            self.last_caught_fish_text = "Error: No inventory!\nPress ENTER to try again!"
-            self.waiting_for_restart = True
-            return
-
         distance = 0
         if self.projectile_position:
             distance = self.projectile_position[0] - self.water_start_x
@@ -337,32 +316,28 @@ class FishingGame:
 
         self.screen.fill((0, 0, 0))
 
-        # Calculate starting X for tiling
         start_x = -(offset % self.bg_width)
 
         # Tile the background image horizontally, placing it at y=0
-        if self.bg_height > 0: # Check height is valid
+        if self.bg_height > 0:
             for x in range(start_x, self.width, self.bg_width):
-                self.screen.blit(self.background_image, (x, 0)) # Draw tiles starting at the top
+                self.screen.blit(self.background_image, (x, 0))
 
         fishing_rod_text = self.font.render(self.inventory.equipped_rod, True, (255,255,255))
         self.screen.blit(fishing_rod_text, (20, 20))
 
-        # --- Draw Ground and Water (relative to offset) ---
-        # These are drawn *after* the background, so they appear on top
+        # Draw Ground and Water
         ground_draw_width = self.water_start_x + self.width * 2
         pygame.draw.rect(self.screen, (34, 139, 34), (-offset, self.ground_level, ground_draw_width, self.height - self.ground_level))
 
         water_draw_width = self.width * 5
         pygame.draw.rect(self.screen, (0, 105, 148), (self.water_start_x - offset, self.ground_level, water_draw_width, self.height - self.ground_level))
 
-        # Draw the water line (optional, kept from original)
         pygame.draw.line(self.screen, (0, 80, 100), (self.water_start_x - offset, self.ground_level), (self.water_start_x - offset, self.height), 3)
 
-        # --- Draw Player/Launch Point (relative to offset) ---
         pygame.draw.circle(self.screen, (0, 0, 0), (self.launch_x - offset, int(self.launch_y)), 6)
 
-        # --- Draw Aiming UI (relative to offset) ---
+        # Draw Aiming UI
         if not self.throwing and not self.fishing_game.active and not self.waiting_for_restart:
             current_angle = 0
             if self.aiming_angle:
@@ -390,7 +365,7 @@ class FishingGame:
             self.screen.blit(angle_surf, (self.launch_x - offset - 300, self.launch_y - 60))
 
 
-        # --- Draw Projectile (relative to offset) ---
+        # Draw Projectile
         if self.projectile_position:
             proj_x = int(self.projectile_position[0]) - offset
             proj_y = int(self.projectile_position[1])
@@ -400,17 +375,17 @@ class FishingGame:
             self.screen.blit(distance_text_surf, (self.width - distance_text_surf.get_width() - 20, 20))
 
 
-        # --- Draw Splashes (relative to offset) ---
+        # Draw Splashes 
         for splash in self.splashes:
             splash_x = int(splash.x - offset)
             splash_y = int(splash.y)
             if splash.life > 0:
                 pygame.draw.circle(self.screen, (255, 255, 255), (splash_x, splash_y), 2)
 
-        # --- Draw Fishing Minigame UI (Not relative to offset - fixed position) ---
+        # Draw Fishing Minigame UI
         self.fishing_game.draw()
 
-        # --- Draw Restart Overlay ---
+        # Draw Restart Overlay
         if self.waiting_for_restart and self.last_caught_fish_text:
             overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 180))

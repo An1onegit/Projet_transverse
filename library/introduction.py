@@ -21,7 +21,6 @@ def get_cinematic_scenes():
     ]
 
 
-
 # function from https://www.pygame.org/wiki/TextWrap
 def render_text_wrapped(surface, text, font, color, rect_area, aa=True, bkg=None):
     rect = pygame.Rect(rect_area)
@@ -55,7 +54,7 @@ def play_cinematic(screen, main_font, prompt_font, scenes_data):
     clock = pygame.time.Clock()
     screen_width, screen_height = screen.get_size()
 
-    # --- Animation States ---
+    # Animation States
     STATE_SCENE_FADE_IN = 0
     STATE_IMAGE_FADE_IN = 1
     STATE_TEXT_TYPING = 2
@@ -63,13 +62,13 @@ def play_cinematic(screen, main_font, prompt_font, scenes_data):
     STATE_SCENE_FADE_OUT = 4
     STATE_FINISH_TYPING_QUICKLY = 5
 
-    # --- Timings (milliseconds) ---
+    # Timings in milliseconds
     SCENE_FADE_DURATION = 700
     IMAGE_FADE_DURATION = 1000
     TEXT_BOX_FADE_DURATION = 500 
     TYPING_CHAR_DELAY = 25
 
-    # --- Text Box Setup ---
+    # Text Box Setup
     text_box_height = screen_height // 3
     text_box_padding = 20
     text_box_rect = pygame.Rect(
@@ -87,7 +86,7 @@ def play_cinematic(screen, main_font, prompt_font, scenes_data):
     text_box_bg_color_base = (20, 20, 20) 
     text_box_alpha_target = 200 
 
-    # --- Full Screen Fade Overlay ---
+    # Full Screen Fade Overlay
     scene_fade_overlay = pygame.Surface((screen_width, screen_height))
     scene_fade_overlay.fill((0, 0, 0))
 
@@ -216,7 +215,6 @@ def play_cinematic(screen, main_font, prompt_font, scenes_data):
                 if progress >= 1.0:
                     scene_active = False
 
-            # --- Drawing ---
             screen.fill((0, 0, 0))
 
             if current_image_alpha > 0:
