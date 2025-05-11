@@ -935,7 +935,6 @@
     <property name="message" value="Press E to talk to Samy"/>
    </properties>
   </object>
-  <object id="83" x="-1200" y="1120"/>
   <object id="84" name="fishing spot 1" type="fishing" x="1928.5" y="1544" width="143" height="28">
    <properties>
     <property name="message" value="Press E to fish"/>
