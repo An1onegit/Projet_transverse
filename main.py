@@ -38,14 +38,14 @@ def Main():
         play_cinematic(screen, cinematic_main_font, cinematic_prompt_font, actual_cinematic_scenes)
 
     # load map and scale it
-    tile_map = TileMap("sources/maps/mapTest2.tmx")
+    tile_map = TileMap("sources/maps/FinalMap.tmx")
     map_surface = pygame.transform.scale_by(tile_map.surface, tile_map.zoom)
 
     sprite_group = CameraGroup(map_surface)
     tile_map.render_objects(sprite_group)
     interaction_zones = tile_map.load_interaction_zones()
     
-    player = Player(pos=(4500 * 1.8, 4500 * 1.8), groups=sprite_group, hitboxes=tile_map.hitboxes)
+    player = Player(pos=(1500, 1500), groups=sprite_group, hitboxes=tile_map.hitboxes)
     inventory = Inventory()
     sound_manager = SoundManager()
 
