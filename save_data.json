@@ -1,14 +1,28 @@
 {
     "player": {
-        "pos_x": 2131.09749324577,
-        "pos_y": 1244.8846101792408
+        "pos_x": 8783.237271127182,
+        "pos_y": 7374.4630907838
     },
     "inventory": {
-        "money": 0,
-        "fishes": [],
-        "rods": [
-            "Basic Rod"
+        "money": 120,
+        "fishes": [
+            "Golden Trout",
+            "Golden Trout",
+            "Golden Trout",
+            "Catfish",
+            "Silver Salmon",
+            "Silver Salmon",
+            "Catfish",
+            "Golden Trout",
+            "Golden Trout",
+            "Catfish",
+            "Silver Salmon",
+            "Silver Salmon"
         ],
-        "equipped_rod": "Basic Rod"
+        "rods": [
+            "Basic Rod",
+            "Advanced Rod"
+        ],
+        "equipped_rod": "Advanced Rod"
     }
 }
