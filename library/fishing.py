@@ -355,31 +355,15 @@ class FishingGame:
         pygame.draw.circle(self.screen, (0, 0, 0), (self.launch_x - offset, int(self.launch_y)), 6)
 
         if self.current_bear_sprite:
-            # Position the bear sprite.
-            # You need to adjust sprite_x so the bear's hand/rod visually aligns with self.launch_x.
-            # This usually means the sprite's bottom-center or bottom-right is near self.launch_x.
-            # Let's assume self.launch_x is where the line *exits* from the bear/rod.
-            # If self.launch_x is the bear's center, sprite_x = self.launch_x - self.current_bear_sprite.get_width() // 2
-            # If self.launch_x is to the right of the bear (casting point),
-            # sprite_x = self.launch_x - self.current_bear_sprite.get_width() # (Or some offset from width)
-            
-            # Let's try aligning the bottom-left of the bear sprite slightly to the left of launch_x,
-            # assuming the bear is facing right and the rod extends from its right.
-            # You will need to experiment with this offset based on your sprite's anchor point.
             bear_sprite_width = self.current_bear_sprite.get_width()
             bear_sprite_height = self.current_bear_sprite.get_height()
             
-            # Example: Position bear so its right edge (approx where rod tip is) is near launch_x
-            # This means the bear's left edge is at launch_x - bear_sprite_width + some_offset_for_rod_tip
-            # Let's assume self.launch_x is the point where the fishing line *starts*.
-            # If the bear sprite includes the rod, and the casting point is, say, 3/4ths of the way
-            # across the bear sprite from its left edge:
-            effective_cast_point_offset_in_sprite = bear_sprite_width * 0.75 # Adjust this ratio
+            effective_cast_point_offset_in_sprite = bear_sprite_width * 0.75
             sprite_x = self.launch_x - effective_cast_point_offset_in_sprite
-            sprite_y = self.ground_level - bear_sprite_height # Align bottom of sprite with ground_level
+            sprite_y = self.ground_level - bear_sprite_height
 
             self.screen.blit(self.current_bear_sprite, (sprite_x - offset, sprite_y))
-        else: # Fallback if no sprite (e.g. the small circle)
+        else: 
             pygame.draw.circle(self.screen, (0,0,0), (self.launch_x - offset, int(self.launch_y)), 6)
 
         # Draw Aiming UI
